@@ -110,12 +110,12 @@ func NewWithConfig(config Config) *PocketBase {
 	}
 	if config.DefaultPostgresDataDb == "" {
 		if config.DefaultPostgresDataDb = os.Getenv("POSTGRES_DATA_DB"); config.DefaultPostgresDataDb == "" {
-			config.DefaultPostgresDataDb = "pb-data2"
+			config.DefaultPostgresDataDb = "pb-data3"
 		}
 	}
 	if config.DefaultPostgresAuxDb == "" {
 		if config.DefaultPostgresAuxDb = os.Getenv("POSTGRES_AUX_DB"); config.DefaultPostgresAuxDb == "" {
-			config.DefaultPostgresAuxDb = "pb-auxiliary2"
+			config.DefaultPostgresAuxDb = "pb-auxiliary3"
 		}
 	}
 	if config.DefaultRealtimeBridge == nil {

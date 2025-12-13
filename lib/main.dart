@@ -27,3 +27,13 @@ class FirstResponderApp extends StatelessWidget {
     );
   }
 }
+
+void GotoPage(BuildContext context, Widget page) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) {
+        return page;
+      },
+    ),
+  );
+}

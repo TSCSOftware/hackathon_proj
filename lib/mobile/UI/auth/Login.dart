@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
+import 'package:hackathon_proj/mobile/test_page.dart';
 
 enum _ViewScheme { standard, highContrastLight, highContrastDark, emergency }
 
@@ -12,7 +13,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController niccon = TextEditingController();
+  final TextEditingController email_controller = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscure = true;
   _ViewScheme _scheme = _ViewScheme.emergency;
@@ -75,14 +76,14 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    niccon.dispose();
+    email_controller.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
-      final email = niccon.text.trim();
+      final email = email_controller.text.trim();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Logged in as $email')));
@@ -135,11 +136,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     TextFormField(
-                      controller: niccon,
+                      controller: email_controller,
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
-                        labelText: 'NIC',
+                        labelText: 'Email',
                         labelStyle: TextStyle(
                           color: _textColor.withOpacity(0.85),
                         ),
@@ -256,6 +257,20 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: Text("dashboard"),
+                    ),
+                    SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return TestPage();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text("Test Page"),
                     ),
                   ],
                 ),
