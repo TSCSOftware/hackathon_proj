@@ -32,7 +32,7 @@
             android:value="2" />
             <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="system_alert_window|location"
+            android:foregroundServiceType="connectedDevice"
         />
     </application>
     <!-- Required to query activities that can process text, see:
