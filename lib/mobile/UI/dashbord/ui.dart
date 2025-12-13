@@ -250,14 +250,22 @@ class _DashboardPageState extends State<DashboardPage> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () async {
-                          final pos = await Geolocator.getCurrentPosition(
+                          Future.delayed(Duration.zero, () async {
+print("Getting coordinates...");
+
+                              final pos = await Geolocator.getCurrentPosition(
                             desiredAccuracy: LocationAccuracy.best,
+                            timeLimit:Duration(minutes:2 ),
                           );
+                          print(  pos);
                           setState(() {
                             // placeholder coordinates (replace with real GPS integration)
                             _coords =
                                 '${pos.latitude.toStringAsFixed(6)}, ${pos.longitude.toStringAsFixed(6)}';
                           });
+                          });
+
+
                         },
                         child: const Text('Get Coordinates'),
                       ),
