@@ -255,7 +255,7 @@ print("Getting coordinates...");
 
                               final pos = await Geolocator.getCurrentPosition(
                             desiredAccuracy: LocationAccuracy.best,
-                            timeLimit:Duration(minutes:2 ),
+                            timeLimit:Duration(minutes:6 ),
                           );
                           print(  pos);
                           setState(() {
