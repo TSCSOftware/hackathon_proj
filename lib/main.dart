@@ -12,6 +12,7 @@ class FirstResponderApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'FirstResponder',
       theme: ThemeData(primarySwatch: Colors.red),
       initialRoute: '/login',

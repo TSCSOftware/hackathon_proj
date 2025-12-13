@@ -10,6 +10,7 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nicCon = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
@@ -61,13 +62,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         labelText: 'Email',
                         prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (v) {
+                        if (v == null || v.trim().isEmpty) return 'Enter email';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _nicCon,
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                        labelText: 'NIC',
+                        prefixIcon: Icon(Icons.person),
                       ),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) return 'Enter email';
