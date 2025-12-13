@@ -82,7 +82,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         labelText: 'Password',
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(
+                            _obscure ? Icons.visibility : Icons.visibility_off,
+                          ),
                           onPressed: () => setState(() => _obscure = !_obscure),
                         ),
                       ),
@@ -102,7 +104,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Confirm password';
-                        if (v != _passwordController.text) return 'Passwords do not match';
+                        if (v != _passwordController.text)
+                          return 'Passwords do not match';
                         return null;
                       },
                     ),
@@ -118,7 +121,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       child: const Text('Back to login'),
-                    )
+                    ),
                   ],
                 ),
               ),
