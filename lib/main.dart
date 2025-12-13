@@ -3,6 +3,7 @@ import 'package:hackathon_proj/mobile/UI/auth/Registration.dart';
 import 'mobile/UI/auth/Login.dart';
 import 'mobile/UI/splash/ui.dart';
 import 'mobile/UI/dashbord/ui.dart';
+import 'Web/web dashboard.dart';
 
 void main() {
   runApp(const FirstResponderApp());
@@ -23,6 +24,7 @@ class FirstResponderApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegistrationPage(),
         '/dashboard': (context) => const DashboardPage(),
+        '/web-dashboard': (context) => const WebDashboardPage(),
       },
     );
   }

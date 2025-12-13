@@ -31,8 +31,6 @@ dependencies:
   pocketbase: ^0.23.0+1
   connectivity_plus: ^7.0.0
   flutter_secure_storage: ^10.0.0
-
-dependencies:
   flutter_osm_plugin: ^1.4.3
 
 dev_dependencies:

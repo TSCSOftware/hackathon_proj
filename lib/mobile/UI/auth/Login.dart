@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/Web/web%20dashboard.dart';
 import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
@@ -277,6 +278,20 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: Text("Test Page"),
+                    ),
+                    SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return WebDashboardPage();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text("web dash Page"),
                     ),
                   ],
                 ),
