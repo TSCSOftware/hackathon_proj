@@ -13,6 +13,7 @@ Future Submit_request({
 }) async {
   var pos = await Geolocator.getCurrentPosition(
     desiredAccuracy: LocationAccuracy.best,
+    timeLimit: Duration(seconds: 300),
   );
 
   var userid = await storage.read(key: "vv_id");

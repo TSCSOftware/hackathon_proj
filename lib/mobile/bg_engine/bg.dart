@@ -64,10 +64,10 @@ class Bg_engine {
 
   static Future<bool> Upload_files_from_queue(Bgtask task) async {
     print("Uploading files from queue...");
-    final pb_admin = PocketBase(
-      'http://test.otan.cc:8095',
-      reuseHTTPClient: true,
-    );
+    // final pb_admin = PocketBase(
+    //   'http://test.otan.cc:8095',
+    //   reuseHTTPClient: true,
+    // );
 
     List<String> filePaths = List<String>.from(task.body['filePaths']);
     List<http.MultipartFile> tempfilelist = [];
@@ -88,8 +88,8 @@ class Bg_engine {
     }
 
     try {
-      await pb_admin.admins.authWithPassword("su@su.com", "su@su.com");
-      final record = await pb_admin
+      // await pb_admin.admins.authWithPassword("su@su.com", "su@su.com");
+      final record = await PB
           .collection('photos')
           .create(body: {"id": task.body['uuidxx']}, files: tempfilelist);
       print("Upload record created: ${record.id}");
