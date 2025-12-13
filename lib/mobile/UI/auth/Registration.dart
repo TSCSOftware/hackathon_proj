@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/main.dart';
+import 'package:hackathon_proj/mobile/UI/splash/ui.dart';
+import 'package:hackathon_proj/mobile/api/pb.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -14,7 +17,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
-   final TextEditingController phone_contol = TextEditingController();
+  final TextEditingController phone_contol = TextEditingController();
   bool _obscure = true;
 
   // Emergency scheme colors (match Login page emergency scheme)
@@ -32,13 +35,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final name = _nameController.text.trim();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registered $name — please login')),
-      );
-      Navigator.pop(context);
+
+      final body = <String, dynamic>{
+        "email": _emailController.text.trim(),
+        "emailVisibility": true,
+        "name": _nameController.text.trim(),
+        "nic": _nicCon.text.trim(),
+        "phone": phone_contol.text.trim(),
+        "password": _passwordController.text.trim(),
+        "passwordConfirm": _confirmController.text.trim(),
+      };
+
+      final record = await PB.collection('users').create(body: body);
+      if (record.id.isNotEmpty) {
+        print('User registered with ID: ${record.id}');
+
+        await ApiService.login_withpass(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        ).then((_) {
+          GotoPage(context, const SplashPage(), isReplace: true);
+        });
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Registration failed')));
+      }
     }
   }
 
@@ -82,41 +107,61 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'Full name',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.person, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) return 'Enter name';
                         return null;
                       },
                     ),
-                      const SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.email, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) return 'Enter email';
@@ -130,41 +175,59 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'NIC',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.person, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
-                      
                     ),
 
-                     const SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     TextFormField(
                       controller: phone_contol,
                       keyboardType: TextInputType.number,
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'phone number',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.person, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
-                     
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
@@ -173,8 +236,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.lock, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscure ? Icons.visibility : Icons.visibility_off,
@@ -184,13 +252,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Enter password';
@@ -205,21 +278,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'Confirm password',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.lock_outline, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Confirm password';
-                        if (v != _passwordController.text) return 'Passwords do not match';
+                        if (v != _passwordController.text)
+                          return 'Passwords do not match';
                         return null;
                       },
                     ),
@@ -231,7 +315,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           backgroundColor: _accentColor,
                           foregroundColor: _textColor,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         onPressed: _submit,
                         child: const Text('Register'),
@@ -240,7 +327,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 12),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text('Back to login', style: TextStyle(color: _accentColor)),
+                      child: Text(
+                        'Back to login',
+                        style: TextStyle(color: _accentColor),
+                      ),
                     ),
                   ],
                 ),

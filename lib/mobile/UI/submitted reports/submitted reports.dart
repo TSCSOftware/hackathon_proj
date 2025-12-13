@@ -71,10 +71,13 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Submitted Reports'),
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+        title: const Text(
+          'Submitted Reports',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -111,16 +114,16 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                   final timestamp = t.timestamp;
 
                   return Card(
-                    elevation: 2,
+                    elevation: 0,
                     margin: const EdgeInsets.symmetric(
                       vertical: 6,
                       horizontal: 8,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                       onTap: () {
                         showDialog(
                           context: context,
@@ -141,7 +144,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                                         ? 'Unknown incident'
                                         : incident,
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
@@ -172,7 +175,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                                     Text(
                                       'Details:',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w700,
                                         color: Colors.grey.shade600,
                                       ),
                                     ),
@@ -206,6 +209,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                         child: Row(
                           children: [
                             CircleAvatar(
+                              radius: 22,
                               backgroundColor: _getSeverityColor(
                                 severity,
                               ).withOpacity(0.15),
@@ -222,7 +226,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                                   Text(
                                     incident,
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                       fontSize: 16,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -257,7 +261,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                                     'SEV $severity',
                                     style: const TextStyle(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                       fontSize: 12,
                                     ),
                                   ),

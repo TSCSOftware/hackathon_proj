@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:hackathon_proj/mobile/api/pb.dart';
+import 'package:hackathon_proj/mobile/bg_engine/bg.dart';
+import 'package:hackathon_proj/mobile/bg_engine/bgtask.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:pocketbase/pocketbase.dart';
@@ -15,7 +17,7 @@ Future<String> Upload_file() async {
 
   if (result != null) {
     List<File> files = result.paths.map((path) => File(path!)).toList();
-    List<http.MultipartFile> tempfilelist = [];
+    List<String> tempFilePaths = [];
     for (var file in files) {
       print('Selected file: ${file.path}');
       // You can now upload the file to your server or process it as needed
@@ -24,20 +26,17 @@ Future<String> Upload_file() async {
       final tempFile = await file.copy(
         '${tempDir.path}\\${file.uri.pathSegments.last}',
       );
-      tempfilelist.add(
-        await http.MultipartFile.fromPath('files', tempFile.path),
-      );
+      tempFilePaths.add(tempFile.path);
       print('Copied to temp location: ${tempFile.path}');
     }
 
-    // file up
+    // Add to background queue
+    final task = Bgtask(
+      task_type: 'file_upload',
+      body: {'filePaths': tempFilePaths, 'uuidxx': uuidxx},
+    );
+    await Bg_engine.add_to_queue(task);
 
-    await pb_admin.admins.authWithPassword("su@su.com", "su@su.com");
-    // pb.collections("_superusers")("su@su.com", "su@su.com");
-    final record = await pb_admin
-        .collection('photos')
-        .create(body: {"id": ""}, files: tempfilelist);
-    print(record.id);
     return uuidxx;
   } else {
     return "null";

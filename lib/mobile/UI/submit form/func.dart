@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bg.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bgtask.dart';
@@ -10,13 +11,16 @@ Future Submit_request({
   required int severity,
   required String photo_id,
 }) async {
-  // TODO get location
+  var pos = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.best,
+  );
+
   var userid = await storage.read(key: "vv_id");
   var timestamp = DateTime.now().millisecondsSinceEpoch;
 
   final body = <String, dynamic>{
     "user": userid,
-    "location": {"lon": 0, "lat": 0},
+    "location": {"lon": pos.longitude, "lat": pos.latitude},
     "timestamp": timestamp,
     "incident_type": incident_type,
     "status": "PENDING",

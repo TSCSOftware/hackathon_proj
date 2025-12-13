@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/main.dart';
+import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
 import 'package:hackathon_proj/mobile/UI/submit%20form/func.dart';
 import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
 import 'package:hackathon_proj/mobile/api/file_upload.dart';
+import 'package:quickalert/quickalert.dart';
 
 class DisasterFormPage extends StatefulWidget {
   const DisasterFormPage({Key? key}) : super(key: key);
@@ -20,26 +23,6 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
   void _pickIncident(String id) => setState(() => _incident = id);
   void _setSeverity(int s) => setState(() => _severity = s);
-  void _getCoords() => setState(() => _coords = '6.9271° N, 79.8612° E');
-  void _setTimestamp() =>
-      setState(() => _timestamp = DateTime.now().toIso8601String());
-
-  Widget OnlineIndicator({required bool asCard}) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            const CircleAvatar(backgroundColor: Colors.green, radius: 6),
-            const SizedBox(width: 8),
-            const Text('Online', style: TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -49,8 +32,8 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    const Color darkRed = Color(0xFF6B0000);
-    const Color lightRed = Color(0xFFE53935);
+    const Color darkRed = Color(0xFF8B0000);
+    const Color lightRed = Color(0xFFFF6B6B);
 
     Widget incidentBox({
       required IconData icon,
@@ -61,42 +44,46 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
       return Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           onTap: () => _pickIncident(id),
           child: Ink(
             decoration: BoxDecoration(
               color: selected ? darkRed : Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(color: selected ? darkRed : Colors.black12),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.06),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  backgroundColor: selected
-                      ? Colors.white.withOpacity(0.12)
-                      : Colors.white,
-                  radius: 28,
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? Colors.white.withOpacity(0.15)
+                        : const Color(0xFFF7F7F7),
+                    shape: BoxShape.circle,
+                  ),
                   child: Icon(
                     icon,
                     size: 28,
                     color: selected ? Colors.white : darkRed,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Text(
                   label,
                   style: TextStyle(
-                    color: selected ? Colors.white : darkRed,
-                    fontWeight: FontWeight.bold,
+                    color: selected ? Colors.white : const Color(0xFF333333),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -108,15 +95,23 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Disaster  Report',
-          style: TextStyle(color: Colors.white),
-        ),
         backgroundColor: darkRed,
+        elevation: 0,
+        titleSpacing: 0,
+        title: const Text(
+          'Disaster Report',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(color: Color(0xFFFF9999)),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [lightRed.withOpacity(0.25), const Color(0xFFF2F2F2)],
+          ),
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -124,27 +119,32 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
               // Incident type container
               OnlineIndicator(asCard: true),
               Card(
+                elevation: 0,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Incident Type',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Wrap(
-                        spacing: 12,
-                        runSpacing: 12,
+                        spacing: 14,
+                        runSpacing: 14,
                         children: [
                           SizedBox(
-                            width: 150,
-                            height: 150,
+                            width: 140,
+                            height: 140,
                             child: incidentBox(
                               icon: Icons.landscape,
                               label: 'Landslide',
@@ -152,8 +152,8 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             ),
                           ),
                           SizedBox(
-                            width: 150,
-                            height: 150,
+                            width: 140,
+                            height: 140,
                             child: incidentBox(
                               icon: Icons.water,
                               label: 'Flood',
@@ -161,8 +161,8 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             ),
                           ),
                           SizedBox(
-                            width: 150,
-                            height: 150,
+                            width: 140,
+                            height: 140,
                             child: incidentBox(
                               icon: Icons.block,
                               label: 'Road block',
@@ -170,8 +170,8 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             ),
                           ),
                           SizedBox(
-                            width: 150,
-                            height: 150,
+                            width: 140,
+                            height: 140,
                             child: incidentBox(
                               icon: Icons.power_off,
                               label: 'Power line down',
@@ -179,8 +179,8 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             ),
                           ),
                           SizedBox(
-                            width: 150,
-                            height: 150,
+                            width: 140,
+                            height: 140,
                             child: incidentBox(
                               icon: Icons.device_unknown,
                               label: 'Other',
@@ -198,18 +198,23 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
               // Severity container
               Card(
+                elevation: 0,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Severity',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Column(
@@ -225,24 +230,36 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                                   label: Text(
                                     '$val',
                                     style: TextStyle(
-                                      color: selected ? Colors.white : darkRed,
+                                      fontWeight: FontWeight.w600,
+                                      color: selected
+                                          ? Colors.white
+                                          : const Color(0xFF333333),
                                     ),
                                   ),
                                   selected: selected,
                                   onSelected: (_) => _setSeverity(val),
                                   selectedColor: darkRed,
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: const Color(0xFFF7F7F7),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                               );
                             }),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            '1=Critical                               5=Low threat',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
+                                '1 = Critical',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                              Text(
+                                '5 = Low threat',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -253,91 +270,36 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
               const SizedBox(height: 12),
 
-              // GPS coordinates
-              Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'GPS Coordinates (lat, long)',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(_coords.isEmpty ? '-' : _coords),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: _getCoords,
-                          child: const Text('Get Coordinates'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 12),
-
-              // Timestamp
-              Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Timestamp',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(_timestamp.isEmpty ? '-' : _timestamp),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: _setTimestamp,
-                          child: const Text('Set Now'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 12),
 
               // Photos optional
               Card(
+                elevation: 0,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Photos (Optional)',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Container(
                         height: 120,
                         decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(8),
+                          color: const Color(0xFFF7F7F7),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
                           child: TextButton.icon(
@@ -347,6 +309,9 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             },
                             icon: const Icon(Icons.add_a_photo),
                             label: const Text('Add Photos'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: darkRed,
+                            ),
                           ),
                         ),
                       ),
@@ -359,27 +324,36 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
               // Additional details
               Card(
+                elevation: 0,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Additional details',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _detailsController,
                         maxLines: 4,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText:
                               'Enter any extra details about the incident...',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFF7F7F7),
                           isDense: true,
                         ),
                       ),
@@ -390,30 +364,37 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
               const SizedBox(height: 12),
 
-              // Submit button (inverted: white background, green text)
+              // Submit button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: darkRed,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {
-                    Submit_request(
+                  onPressed: () async {
+                    await Submit_request(
                       incident_type: _incident,
                       additional_details: _detailsController.text,
                       severity: _severity,
                       photo_id: photo_id,
                     );
+                    await QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.success,
+                    ).then((_) {
+                      GotoPage(context, DashboardPage(), isReplace: true);
+                    });
+
                     // TODO
                   },
                   child: const Text(
-                    'Submit',
+                    'Submit Report',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),
                   ),
@@ -421,17 +402,6 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
               ),
 
               // Footer (same as dashboard)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Disaster mangement',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
             ],
           ),
         ),

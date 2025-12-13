@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final PB = PocketBase('http://test.otan.cc:8095', reuseHTTPClient: true);
 
@@ -32,6 +33,16 @@ class ApiService {
       if (PB.authStore.isValid) {
         await Save_token_to_storage(PB.authStore.token, userid);
       }
+
+      //update userdata
+      var user = await PB.collection("users").getOne(userid, expand: '');
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('name', user.getStringValue('name'));
+      prefs.setString('email', user.getStringValue('email'));
+      prefs.setString('nic', user.getStringValue('nic'));
+      prefs.setString('phone', user.getStringValue('phone'));
+
+      // SET  SHAREDPREF NAME,EMAIL, NIC, PHONE
 
       // get user id#
 

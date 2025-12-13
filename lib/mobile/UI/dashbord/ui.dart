@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/Profile/Profile.dart';
 import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
@@ -248,10 +249,14 @@ class _DashboardPageState extends State<DashboardPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          final pos = await Geolocator.getCurrentPosition(
+                            desiredAccuracy: LocationAccuracy.best,
+                          );
                           setState(() {
                             // placeholder coordinates (replace with real GPS integration)
-                            _coords = '6.9271° N, 79.8612° E';
+                            _coords =
+                                '${pos.latitude.toStringAsFixed(6)}, ${pos.longitude.toStringAsFixed(6)}';
                           });
                         },
                         child: const Text('Get Coordinates'),
@@ -263,18 +268,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
 
             const Spacer(),
-
-            // Footer
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                'Disaster Mangement of Sri Lanka',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
           ],
         ),
       ),

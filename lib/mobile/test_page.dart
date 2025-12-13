@@ -1,7 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/Web/test.dart';
+import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
+import 'package:geolocator/geolocator.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({Key? key}) : super(key: key);
@@ -121,7 +122,60 @@ class _TestPageState extends State<TestPage> {
             ),
 
             SizedBox(height: 16),
-            ElevatedButton(onPressed: () async {}, child: Text('tt')),
+
+            Text('Current location: $_coords'),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: _gettingLocation
+                  ? null
+                  : () async {
+                      setState(() => _gettingLocation = true);
+                      try {
+                        LocationPermission permission =
+                            await Geolocator.checkPermission();
+                        if (permission == LocationPermission.denied) {
+                          permission = await Geolocator.requestPermission();
+                        }
+                        if (permission == LocationPermission.denied ||
+                            permission == LocationPermission.deniedForever) {
+                          setState(() {
+                            _coords = 'Permission denied';
+                            _gettingLocation = false;
+                          });
+                          return;
+                        }
+
+                        final pos = await Geolocator.getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.best,
+                        );
+                        setState(() {
+                          _coords =
+                              '${pos.latitude.toStringAsFixed(6)}, ${pos.longitude.toStringAsFixed(0) == '0' ? pos.longitude.toStringAsFixed(6) : pos.longitude.toStringAsFixed(6)}';
+                        });
+                      } catch (e) {
+                        setState(() {
+                          _coords = 'Error: ${e.toString()}';
+                        });
+                      } finally {
+                        setState(() => _gettingLocation = false);
+                      }
+                    },
+              child: _gettingLocation
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Get current location'),
+            ),
+
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                GotoPage(context, TestPage_web());
+              },
+              child: const Text('tt'),
+            ),
           ],
         ),
       ),

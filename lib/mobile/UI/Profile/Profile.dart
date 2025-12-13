@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hackathon_proj/mobile/test_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -65,6 +66,26 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
     ).showSnackBar(const SnackBar(content: Text('Logged out')));
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        name = prefs.getString('name') ?? name;
+        email = prefs.getString('email') ?? email;
+        nic = prefs.getString('nic') ?? nic;
+        phone = prefs.getString('phone') ?? phone;
+      });
+    } catch (e) {
+      // ignore errors and keep placeholder values
+    }
   }
 
   @override
