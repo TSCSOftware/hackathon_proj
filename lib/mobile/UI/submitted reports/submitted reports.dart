@@ -22,8 +22,9 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
   Future<void> _loadSubmitted() async {
     final prefs = await SharedPreferences.getInstance();
     final list = prefs.getStringList('succeed_request_queue') ?? [];
+   
     setState(() {
-      _submitted = list.map((e) => Bgtask.fromJsonString(e)).toList();
+      _submitted = list.reversed.map((e) => Bgtask.fromJsonString(e)).toList();
     });
   }
 

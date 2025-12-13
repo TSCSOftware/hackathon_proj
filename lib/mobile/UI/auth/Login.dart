@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_proj/Web/web%20dashboard.dart';
 import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
+import 'package:hackathon_proj/mobile/api/location.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
 import 'package:hackathon_proj/mobile/test_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum _ViewScheme { standard, highContrastLight, highContrastDark, emergency }
 
@@ -89,8 +91,17 @@ class _LoginPageState extends State<LoginPage> {
       final email = email_controller.text.trim();
       await ApiService.login_withpass(email, _passwordController.text).then((
         value,
-      ) {
+      ) async {
         if (value) {
+          await ensureLocationEnabled(context);
+          Map<Permission, PermissionStatus> statuses = await [
+  Permission.location,
+  Permission.storage,
+  Permission.notification,
+  
+  Permission.ignoreBatteryOptimizations
+].request();
+
           GotoPage(context, const DashboardPage());
         }
       });

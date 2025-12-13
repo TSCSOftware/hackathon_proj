@@ -45,6 +45,7 @@ class ApiService {
       // SET  SHAREDPREF NAME,EMAIL, NIC, PHONE
 
       // get user id#
+      
 
       return true;
     } catch (e) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/splash/ui.dart';
+import 'package:hackathon_proj/mobile/api/location.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -56,8 +57,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         await ApiService.login_withpass(
           _emailController.text.trim(),
           _passwordController.text.trim(),
-        ).then((_) {
-          GotoPage(context, const SplashPage(), isReplace: true);
+        ).then((_) async {
+         await ensureLocationEnabled(context);
+          // GotoPage(context, const SplashPage(), isReplace: true);
         });
       } else {
         ScaffoldMessenger.of(
