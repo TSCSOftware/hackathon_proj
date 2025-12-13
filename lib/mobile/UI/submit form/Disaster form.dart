@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/models/report.dart';
 
 class DisasterFormPage extends StatefulWidget {
   const DisasterFormPage({Key? key}) : super(key: key);
@@ -264,35 +265,37 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
               const SizedBox(height: 12),
 
-              // Submit button (green)
+              // Submit button (inverted: white background, green text)
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    backgroundColor: const Color.fromARGB(255, 73, 191, 91),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: const BorderSide(color: Colors.green)),
                   ),
                   onPressed: () {
-                    // Simple submit action: show a snackbar and clear details
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Form submitted')));
+                    // Create report and add to pending store
+                    final r = Report(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      incident: _incident.isEmpty ? 'Unspecified' : _incident,
+                      severity: _severity,
+                      coords: _coords,
+                      timestamp: _timestamp.isEmpty ? DateTime.now().toIso8601String() : _timestamp,
+                      details: _detailsController.text,
+                    );
+                    addPending(r);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Saved to pending reports')));
                     setState(() {
                       _detailsController.clear();
                     });
                   },
-                  child: const Text('Submit', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: const Text('Submit', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 0, 0, 0))),
                 ),
               ),
 
-              // Footer (same as dashboard)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Disaster mangement',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9), fontWeight: FontWeight.bold),
-                ),
-              ),
+              // footer removed as requested
             ],
           ),
         ),

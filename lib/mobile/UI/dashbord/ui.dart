@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../submit form/Disaster form.dart';
+import '../pending forms/pending forms.dart';
+import '../submitted reports/submitted reports.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -110,7 +112,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
-                          onTap: () => _showSnack('Pending Reports'),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PendingFormsPage())),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -136,7 +138,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
-                        onTap: () => _showSnack('Submitted Reports'),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SubmittedReportsPage())),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
