@@ -71,19 +71,27 @@ class _PendingFormsPageState extends State<PendingFormsPage> {
 
   @override
   Widget build(BuildContext context) {
+    const Color darkRed = Color(0xFF6B0000);
+    const Color lightRed = Color(0xFFE53935);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+        backgroundColor: darkRed,
+        foregroundColor: Colors.white,
         title: const Text(
           'Pending Reports',
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: _tasks.isEmpty
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Color(0xFFFF9999),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: _tasks.isEmpty
             ? const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -328,6 +336,6 @@ class _PendingFormsPageState extends State<PendingFormsPage> {
                 },
               ),
       ),
-    );
+    ));
   }
 }
