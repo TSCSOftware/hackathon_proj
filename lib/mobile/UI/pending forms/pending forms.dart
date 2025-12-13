@@ -87,7 +87,7 @@ class _PendingFormsPageState extends State<PendingFormsPage> {
       body: Container(
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
-          color: Color(0xFFFF9999),
+          color: Color.fromARGB(255, 255, 255, 255),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

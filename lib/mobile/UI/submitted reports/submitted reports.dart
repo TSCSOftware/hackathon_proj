@@ -70,19 +70,27 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
 
   @override
   Widget build(BuildContext context) {
+    const Color darkRed = Color(0xFF6B0000);
+    const Color lightRed = Color(0xFFE53935);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+        backgroundColor: darkRed,
+        foregroundColor: Colors.white,
         title: const Text(
           'Submitted Reports',
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: _submitted.isEmpty
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: _submitted.isEmpty
             ? const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -282,7 +290,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
                 },
               ),
       ),
-    );
+    ));
   }
 
   Widget _buildDetailRow(String title, String value, {Color? color}) {

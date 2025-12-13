@@ -130,7 +130,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       width: 170,
                       height: 170,
                       child: Material(
-                        color: const Color.fromARGB(255, 236, 236, 236),
+                        color: const Color.fromARGB(118, 184, 184, 184),
                         elevation: 8,
                         shadowColor: Colors.black.withOpacity(0.2),
                         shape: RoundedRectangleBorder(

@@ -192,10 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       subtitle: Text(phone, style: TextStyle(color: textColor)),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.phone),
-                      ),
+                      
                     ),
                   ],
                 ),

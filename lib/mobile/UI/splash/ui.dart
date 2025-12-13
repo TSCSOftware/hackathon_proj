@@ -43,12 +43,12 @@ class _SplashPageState extends State<SplashPage> {
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: Icon(Icons.local_hospital, size: 64, color: lightRed),
+                  child: Icon(Icons.report_problem_sharp, size: 64, color: lightRed),
                 ),
               ),
               const SizedBox(height: 16),
               const Text(
-                'FirstResponder',
+                'Red Alert',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
