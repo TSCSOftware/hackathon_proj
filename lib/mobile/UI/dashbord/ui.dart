@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../submit form/Disaster form.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _DashboardPageState extends State<DashboardPage> {
       body: Container(
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
-          color: const Color(0xFFFFF3CD)
+          color: Color(0xFFE6E6),
         ),
         child: Column(
           children: [
@@ -78,16 +79,20 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(
                       width: 200,
                       height: 200,
-                      child: InkWell(
-                        onTap: () => _showSnack('Submit Report'),
-                        child: Container(
-                          color: const Color.fromARGB(255, 255, 25, 4),
+                      child: Material(
+                        color: const Color.fromARGB(255, 255, 208, 208),
+                        elevation: 10,
+                        shadowColor: Colors.black.withOpacity(0.24),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DisasterFormPage())),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.send, color: Colors.white, size: 48),
-                              SizedBox(height: 8),
-                              Text('Submit Report', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            children: [
+                              CircleAvatar(backgroundColor: const Color(0xFFB00020), radius: 30, child: const Icon(Icons.send, color: Colors.white, size: 28)),
+                              const SizedBox(height: 12),
+                              const Text('Submit Report', style: TextStyle(color: Color(0xFFB00020), fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
@@ -98,16 +103,20 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(
                       width: 200,
                       height: 200,
-                      child: InkWell(
-                        onTap: () => _showSnack('Pending Reports'),
-                        child: Container(
-                          color: Colors.grey,
+                      child: Material(
+                        color: const Color.fromARGB(255, 236, 236, 236),
+                        elevation: 8,
+                        shadowColor: Colors.black.withOpacity(0.2),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () => _showSnack('Pending Reports'),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.pending_actions, color: Colors.white, size: 48),
-                              SizedBox(height: 8),
-                              Text('Pending Reports', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            children: [
+                              CircleAvatar(backgroundColor: const Color(0xFF757575), radius: 30, child: const Icon(Icons.pending_actions, color: Colors.white, size: 28)),
+                              const SizedBox(height: 12),
+                              const Text('Pending Reports', style: TextStyle(color: Color(0xFF757575), fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
@@ -120,16 +129,20 @@ class _DashboardPageState extends State<DashboardPage> {
                   child: SizedBox(
                     width: 200,
                     height: 200,
-                    child: InkWell(
-                      onTap: () => _showSnack('Submitted Reports'),
-                      child: Container(
-                        color: const Color.fromARGB(255, 13, 181, 4),
+                    child: Material(
+                      color: const Color.fromARGB(179, 194, 244, 202),
+                      elevation: 10,
+                      shadowColor: Colors.black.withOpacity(0.24),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () => _showSnack('Submitted Reports'),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.check, color: Colors.white, size: 56),
-                            SizedBox(height: 8),
-                            Text('Submitted Reports', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          children: [
+                            CircleAvatar(backgroundColor: const Color(0xFF2E8B57), radius: 34, child: const Icon(Icons.check, color: Colors.white, size: 30)),
+                            const SizedBox(height: 12),
+                            const Text('Submitted Reports', style: TextStyle(color: Color(0xFF2E8B57), fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -222,7 +235,7 @@ class _GradientSquareButton extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.18), blurRadius: 6, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.24), blurRadius: 12, spreadRadius: 2, offset: const Offset(0, 6))],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
