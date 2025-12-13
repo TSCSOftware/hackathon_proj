@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       case _ViewScheme.highContrastDark:
         return Colors.black;
       case _ViewScheme.emergency:
-        return const Color(0xFFFFF3CD);
+        return const Color(0xFFFFE6E6);
       case _ViewScheme.standard:
       default:
         return Theme.of(context).scaffoldBackgroundColor;
@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       case _ViewScheme.highContrastDark:
         return const Color(0xFF121212);
       case _ViewScheme.emergency:
-        return const Color(0xFFFFF9E6);
+        return const Color.fromARGB(255, 255, 255, 255);
       case _ViewScheme.standard:
       default:
         return Theme.of(context).cardColor;

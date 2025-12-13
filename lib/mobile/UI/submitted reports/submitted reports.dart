@@ -86,7 +86,7 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
       body: Container(
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: Color(0xFFFFE6E6),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
