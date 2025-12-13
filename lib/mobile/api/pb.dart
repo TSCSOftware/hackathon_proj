@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-final PB = PocketBase('http://192.168.99.140:8090', reuseHTTPClient: true);
+final PB = PocketBase('http://test.otan.cc:8095', reuseHTTPClient: true);
 
 final storage = FlutterSecureStorage(
   aOptions: AndroidOptions(

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/main.dart';
+import 'package:hackathon_proj/mobile/UI/Profile/Profile.dart';
 import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
 import '../submit form/Disaster form.dart';
 import '../pending forms/pending forms.dart';
@@ -35,7 +37,8 @@ class _DashboardPageState extends State<DashboardPage> {
   void _toggleConnection() => setState(() => _isOnline = !_isOnline);
 
   void _showSnack(String label) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(label)));
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(label)));
+    GotoPage(context, ProfilePage());
   }
 
   @override
@@ -134,7 +137,12 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PendingFormsPage())),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const PendingFormsPage(),
+                            ),
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -176,7 +184,12 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SubmittedReportsPage())),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SubmittedReportsPage(),
+                          ),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

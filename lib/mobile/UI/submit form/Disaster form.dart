@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
 
 class DisasterFormPage extends StatefulWidget {
   const DisasterFormPage({Key? key}) : super(key: key);
@@ -92,19 +93,6 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: darkRed,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(30),
-              onTap: () {},
-              child: const CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Color(0xFF6B0000)),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
