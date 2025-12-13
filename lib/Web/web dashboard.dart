@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:hackathon_proj/Web/live_data.dart';
 import 'package:hackathon_proj/models/report.dart';
 
 class WebDashboardPage extends StatefulWidget {
@@ -183,110 +184,7 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
           AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             width: _sidebarOpen ? 380 : 0,
-            child: _sidebarOpen
-                ? Container(
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                child: Text(
-                                  'Live Incoming Reports',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              Chip(
-                                label: Text('${_incoming.length} new'),
-                                backgroundColor: Colors.red[50],
-                              ),
-                              const SizedBox(width: 8),
-                              Chip(
-                                label: Text('${pendingReports.length} pending'),
-                                backgroundColor: Colors.orange[50],
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () =>
-                                    setState(() => _sidebarOpen = false),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(height: 1),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(child: Container()),
-                              OutlinedButton.icon(
-                                onPressed: () =>
-                                    setState(() => _incoming.clear()),
-                                icon: const Icon(Icons.clear),
-                                label: const Text('Clear Incoming'),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(height: 1),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            itemCount: _incoming.length + pendingReports.length,
-                            itemBuilder: (context, i) {
-                              final bool isIncoming = i < _incoming.length;
-                              final r = isIncoming
-                                  ? _incoming[i]
-                                  : pendingReports[i - _incoming.length];
-                              final color = r.severity >= 4
-                                  ? Colors.red
-                                  : (r.severity == 3
-                                        ? Colors.orange
-                                        : Colors.blue);
-                              final status = isIncoming
-                                  ? 'Incoming'
-                                  : 'Pending';
-                              return ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundColor: color,
-                                  child: Text(
-                                    r.severity.toString(),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                title: Text(
-                                  r.incident,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                subtitle: Text('${r.timestamp} • ${r.coords}'),
-                                trailing: null,
-                                onTap: () {},
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : const SizedBox.shrink(),
+            child: _sidebarOpen ? LiveDataPage() : const SizedBox.shrink(),
           ),
         ],
       ),

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/Web/live_data.dart';
+import 'package:hackathon_proj/Web/web%20dashboard.dart';
+import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/widgets/on_tap_db_button.dart';
 
 class WebDashPage extends StatelessWidget {
   const WebDashPage({Key? key}) : super(key: key);
-
-  void _onTap(BuildContext context, String label) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('$label tapped')));
-  }
 
   // Replaced with reusable OnTapDBButton widget (see lib/mobile/UI/widgets/on_tap_db_button.dart)
 
@@ -30,14 +27,18 @@ class WebDashPage extends StatelessWidget {
                           icon: Icons.map,
                           label: 'Live Map',
                           color: Colors.teal,
-                          onTap: () => _onTap(context, 'Live Map'),
+                          onTap: () {
+                            GotoPage(context, WebDashboardPage());
+                          },
                         ),
                         const SizedBox(width: 24),
                         OnTapDBButton(
                           icon: Icons.report,
                           label: 'Reports',
                           color: Colors.deepOrange,
-                          onTap: () => _onTap(context, 'Reports'),
+                          onTap: () {
+                            GotoPage(context, LiveDataPage());
+                          },
                         ),
                       ],
                     )
@@ -48,14 +49,18 @@ class WebDashPage extends StatelessWidget {
                           icon: Icons.map,
                           label: 'Live Map',
                           color: Colors.teal,
-                          onTap: () => _onTap(context, 'Live Map'),
+                          onTap: () {
+                            GotoPage(context, WebDashboardPage());
+                          },
                         ),
                         const SizedBox(height: 16),
                         OnTapDBButton(
                           icon: Icons.report,
                           label: 'Reports',
                           color: Colors.deepOrange,
-                          onTap: () => _onTap(context, 'Reports'),
+                          onTap: () {
+                            GotoPage(context, LiveDataPage());
+                          },
                         ),
                       ],
                     ),
