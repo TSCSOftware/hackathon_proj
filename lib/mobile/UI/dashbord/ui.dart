@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
 import '../submit form/Disaster form.dart';
+import '../Profile/Profile.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class _DashboardPageState extends State<DashboardPage> {
             padding: const EdgeInsets.only(right: 12.0),
             child: InkWell(
               borderRadius: BorderRadius.circular(30),
-              onTap: () => _showSnack('Profile tapped'),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage())),
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Icon(Icons.person, color: darkRed),
