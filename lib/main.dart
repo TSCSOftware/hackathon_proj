@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:hackathon_proj/mobile/UI/auth/Registration.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bg.dart';
 import 'mobile/UI/auth/Login.dart';
@@ -10,6 +11,7 @@ import 'mobile/UI/dashbord/ui.dart';
 import 'Web/web dashboard.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const FirstResponderApp());
 }
 
@@ -81,4 +83,39 @@ bool _toOnline(dynamic result) {
     return result.any((r) => r != ConnectivityResult.none);
   }
   return false;
+}
+
+void startBackgroundService() {
+  final service = FlutterBackgroundService();
+  service.startService();
+}
+
+void stopBackgroundService() {
+  final service = FlutterBackgroundService();
+  service.invoke("stop");
+}
+
+Future<void> initializeService() async {
+  final service = FlutterBackgroundService();
+
+  await service.configure(
+    iosConfiguration: IosConfiguration(
+      autoStart: true,
+      onForeground: onStart,
+      onBackground: (service) async {
+        return true;
+      },
+    ),
+    androidConfiguration: AndroidConfiguration(
+      autoStart: true,
+      onStart: onStart,
+      isForegroundMode: true,
+      autoStartOnBoot: true,
+    ),
+  );
+}
+
+@pragma('vm:entry-point')
+void onStart(ServiceInstance service) async {
+  BG_sync();
 }

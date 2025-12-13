@@ -252,47 +252,48 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return DashboardPage();
-                            },
-                          ),
-                        );
-                      },
-                      child: Text("dashboard"),
-                    ),
-                    SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return TestPage();
-                            },
-                          ),
-                        );
-                      },
-                      child: Text("Test Page"),
-                    ),
-                    SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return WebDashboardPage();
-                            },
-                          ),
-                        );
-                      },
-                      child: Text("web dash Page"),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) {
+                    //           return DashboardPage();
+                    //         },
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Text("dashboard"),
+                    // ),
+
+                    // SizedBox(height: 8),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) {
+                    //           return TestPage();
+                    //         },
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Text("Test Page"),
+                    // ),
+                    // SizedBox(height: 8),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) {
+                    //           return WebDashboardPage();
+                    //         },
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Text("web dash Page"),
+                    // ),
                   ],
                 ),
               ),

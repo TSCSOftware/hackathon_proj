@@ -38,6 +38,7 @@ dependencies:
   http: ^1.6.0
   geolocator: ^11.0.2
   quickalert: ^1.1.0
+  flutter_background_service: ^5.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
