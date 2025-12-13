@@ -49,8 +49,8 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
+                        labelText: 'NIC',
+                        prefixIcon: Icon(Icons.person),
                       ),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) return 'Enter email';
