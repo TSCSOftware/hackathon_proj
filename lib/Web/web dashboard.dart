@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:hackathon_proj/Web/live_data.dart';
 import 'package:hackathon_proj/models/report.dart';
+import 'package:hackathon_proj/mobile/api/file_upload.dart';
 
 class WebDashboardPage extends StatefulWidget {
   const WebDashboardPage({Key? key}) : super(key: key);
@@ -22,59 +23,82 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
     initPosition: GeoPoint(latitude: 6.7056, longitude: 80.3847),
     areaLimit: BoundingBox(north: 47.8, east: 10.5, south: 45.8, west: 5.9),
   );
+  // Keep a lookup from coordinates to their Request for quick info display
+  final Map<String, Request> _requestByPoint = {};
+
+  String _ptKey(double lat, double lon) =>
+      '${lat.toStringAsFixed(6)},${lon.toStringAsFixed(6)}';
+
+  Future<void> _fetchAndPlotRequests() async {
+    try {
+      final records = await pb_admin.collection('requests').getFullList();
+      final List<Request> list = records.map<Request>((r) {
+        try {
+          return Request.fromMap(r.toJson());
+        } catch (_) {
+          return Request(
+            id: r.id ?? '',
+            lon: 0,
+            lat: 0,
+            timestamp: 0,
+            incidentType: '',
+            status: '',
+            additionalDetails: '',
+            severity: 0,
+            photoId: '',
+          );
+        }
+      }).toList();
+      // Ensure newest first
+      list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+      // Optionally clear old markers
+      // await _mapController.removeAllMarkers();
+
+      for (final req in list) {
+        final status = req.status.toUpperCase();
+        Color color;
+        IconData iconData;
+        if (status == 'PENDING') {
+          color = Colors.amber;
+          iconData = Icons.location_on;
+        } else if (status == 'ACTION_TAKEN') {
+          color = const Color.fromARGB(255, 105, 7, 128);
+          iconData = Icons.build_circle;
+        } else if (status == 'COMPLETED') {
+          color = Colors.green;
+          iconData = Icons.check_circle;
+        } else {
+          color = Colors.blueGrey;
+          iconData = Icons.location_on;
+        }
+
+        await _mapController.addMarker(
+          GeoPoint(latitude: req.lat, longitude: req.lon),
+          markerIcon: MarkerIcon(icon: Icon(iconData, color: color, size: 48)),
+          angle: 0,
+        );
+        _requestByPoint[_ptKey(req.lat, req.lon)] = req;
+      }
+    } catch (err) {
+      // handle fetch error if needed
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     // subscribe to simulated incoming stream
+    Future.delayed(Duration.zero, () async {
+      await _fetchAndPlotRequests();
+    });
     _incomingSub = _incomingController.stream.listen((r) {
       setState(() => _incoming.insert(0, r));
     });
 
     // simulate live incoming reports every 5 seconds (demo)
-    var demoReports = [
-      Report(
-        id: 'r6',
-        incident: 'New flash flood',
-        severity: 4,
-        coords: '6.9300° N, 79.8600° E',
-        timestamp: '2025-12-13 10:02',
-        details: 'Rapid water rise near bridge.',
-      ),
-      Report(
-        id: 'r7',
-        incident: 'Minor fire outbreak',
-        severity: 2,
-        coords: '6.9250° N, 79.8550° E',
-        timestamp: '2025-12-13 10:05',
-        details: 'Contained by locals.',
-      ),
-      Report(
-        id: 'r8',
-        incident: 'Road block - debris',
-        severity: 3,
-        coords: '6.9220° N, 79.8480° E',
-        timestamp: '2025-12-13 10:12',
-        details: 'Cleanup requested.',
-      ),
-    ];
 
     int idx = 0;
-    Timer.periodic(const Duration(seconds: 5), (t) {
-      if (idx >= demoReports.length) return;
-      _incomingController.add(demoReports[idx++]);
-    });
-
-    // Add a marker at the requested fixed location after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        await _mapController.addMarker(
-          GeoPoint(latitude: 6.7056, longitude: 80.3847),
-        );
-      } catch (_) {
-        // ignore errors if controller not ready
-      }
-    });
   }
 
   @override
@@ -142,6 +166,7 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
               }),
               icon: const Icon(Icons.refresh, color: Colors.white),
             ),
+            const SizedBox(width: 8),
           ],
         ),
       ),
@@ -178,6 +203,59 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
                   roadColor: Colors.yellowAccent,
                 ),
               ),
+
+              onGeoPointClicked: (point) {
+                final key = _ptKey(point.latitude, point.longitude);
+                final req = _requestByPoint[key];
+                if (req == null) return;
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    final date = DateTime.fromMillisecondsSinceEpoch(
+                      req.timestamp,
+                    ).toLocal();
+                    return AlertDialog(
+                      title: Text(req.incidentType.replaceAll('_', ' ')),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.place, size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                '(${req.lat.toStringAsFixed(4)}, ${req.lon.toStringAsFixed(4)})',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Status: ${req.status}'),
+                          const SizedBox(height: 8),
+                          Text('Severity: ${req.severity}'),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Details: ${req.additionalDetails}',
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Time: ${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Close'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
           ),
 
