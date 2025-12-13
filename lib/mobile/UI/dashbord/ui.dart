@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
 import '../submit form/Disaster form.dart';
 import '../pending forms/pending forms.dart';
 import '../submitted reports/submitted reports.dart';
@@ -13,6 +17,20 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   bool _isOnline = false; // connection status (false = offline)
   String _coords = ''; // placeholder for GPS coordinates
+  StreamSubscription<List<ConnectivityResult>>? subscription;
+  @override
+  initState() {
+    super.initState();
+    // Initialize connectivity subscription
+    subscription = Connectivity().onConnectivityChanged.listen((results) {
+      bool online =
+          results.contains(ConnectivityResult.wifi) ||
+          results.contains(ConnectivityResult.mobile);
+      setState(() {
+        _isOnline = online;
+      });
+    });
+  }
 
   void _toggleConnection() => setState(() => _isOnline = !_isOnline);
 
@@ -45,30 +63,11 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Color(0xFFE6E6),
-        ),
+        decoration: const BoxDecoration(color: Color(0xFFE6E6)),
         child: Column(
           children: [
+            OnlineIndicator(asCard: true),
             // Top connection status row (repeat for prominence)
-            Card(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: _isOnline ? Colors.green : Colors.red,
-                  radius: 10,
-                ),
-                title: Text(
-                  _isOnline ? 'Connected to network' : 'Offline',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                trailing: TextButton(
-                  onPressed: _toggleConnection,
-                  child: Text(_isOnline ? 'Go Offline' : 'Try Connect'),
-                ),
-              ),
-            ),
             const SizedBox(height: 12),
 
             // Reverse-pyramid button layout using square gradient buttons
@@ -85,16 +84,37 @@ class _DashboardPageState extends State<DashboardPage> {
                         color: const Color.fromARGB(255, 255, 208, 208),
                         elevation: 10,
                         shadowColor: Colors.black.withOpacity(0.24),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DisasterFormPage())),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const DisasterFormPage(),
+                            ),
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CircleAvatar(backgroundColor: const Color(0xFFB00020), radius: 30, child: const Icon(Icons.send, color: Colors.white, size: 28)),
+                              CircleAvatar(
+                                backgroundColor: const Color(0xFFB00020),
+                                radius: 30,
+                                child: const Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
+                              ),
                               const SizedBox(height: 12),
-                              const Text('Submit Report', style: TextStyle(color: Color(0xFFB00020), fontWeight: FontWeight.bold)),
+                              const Text(
+                                'Submit Report',
+                                style: TextStyle(
+                                  color: Color(0xFFB00020),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -109,16 +129,32 @@ class _DashboardPageState extends State<DashboardPage> {
                         color: const Color.fromARGB(255, 236, 236, 236),
                         elevation: 8,
                         shadowColor: Colors.black.withOpacity(0.2),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
                           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PendingFormsPage())),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CircleAvatar(backgroundColor: const Color(0xFF757575), radius: 30, child: const Icon(Icons.pending_actions, color: Colors.white, size: 28)),
+                              CircleAvatar(
+                                backgroundColor: const Color(0xFF757575),
+                                radius: 30,
+                                child: const Icon(
+                                  Icons.pending_actions,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
+                              ),
                               const SizedBox(height: 12),
-                              const Text('Pending Reports', style: TextStyle(color: Color(0xFF757575), fontWeight: FontWeight.bold)),
+                              const Text(
+                                'Pending Reports',
+                                style: TextStyle(
+                                  color: Color(0xFF757575),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -135,16 +171,32 @@ class _DashboardPageState extends State<DashboardPage> {
                       color: const Color.fromARGB(179, 194, 244, 202),
                       elevation: 10,
                       shadowColor: Colors.black.withOpacity(0.24),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
                         onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SubmittedReportsPage())),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircleAvatar(backgroundColor: const Color(0xFF2E8B57), radius: 34, child: const Icon(Icons.check, color: Colors.white, size: 30)),
+                            CircleAvatar(
+                              backgroundColor: const Color(0xFF2E8B57),
+                              radius: 34,
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
                             const SizedBox(height: 12),
-                            const Text('Submitted Reports', style: TextStyle(color: Color(0xFF2E8B57), fontWeight: FontWeight.bold)),
+                            const Text(
+                              'Submitted Reports',
+                              style: TextStyle(
+                                color: Color(0xFF2E8B57),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -158,7 +210,9 @@ class _DashboardPageState extends State<DashboardPage> {
             // Blank container for GPS coordinates
             Card(
               color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -171,7 +225,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     const SizedBox(height: 8),
                     Text(
                       _coords.isEmpty ? '-' : _coords,
-                      style: const TextStyle(fontSize: 16, color: Colors.black87),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     // Optional quick action to simulate fetching coordinates
@@ -199,7 +256,10 @@ class _DashboardPageState extends State<DashboardPage> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
                 'Disaster Mangement of Sri Lanka',
-                style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9), fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -235,16 +295,34 @@ class _GradientSquareButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
+            gradient: LinearGradient(
+              colors: colors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.24), blurRadius: 12, spreadRadius: 2, offset: const Offset(0, 6))],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.24),
+                blurRadius: 12,
+                spreadRadius: 2,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: largeLabel ? 56 : 40, color: Colors.white),
               const SizedBox(height: 8),
-              Text(label, style: TextStyle(color: Colors.white, fontSize: largeLabel ? 18 : 14, fontWeight: FontWeight.bold)),
+              Text(
+                label,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: largeLabel ? 18 : 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
