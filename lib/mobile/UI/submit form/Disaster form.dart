@@ -24,22 +24,14 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
   Widget OnlineIndicator({required bool asCard}) {
     return Card(
       color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            const CircleAvatar(
-              backgroundColor: Colors.green,
-              radius: 6,
-            ),
+            const CircleAvatar(backgroundColor: Colors.green, radius: 6),
             const SizedBox(width: 8),
-            const Text(
-              'Online',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            const Text('Online', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -408,9 +400,9 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Form submitted')),
                     );
-                    setState(() {
-                      _detailsController.clear();
-                    });
+                    // setState(() {
+                    //   _detailsController.clear();
+                    // });
                   },
                   child: const Text(
                     'Submit',

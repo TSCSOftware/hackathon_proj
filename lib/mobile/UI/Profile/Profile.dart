@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/mobile/test_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class _ProfilePageState extends State<ProfilePage> {
   String phone = '+1 234 567 890';
 
   // Local image placeholder. Replace with network/file image later.
-  
 
   void _editPhoto() {
     // TODO: implement image picker and upload
@@ -30,7 +30,11 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text('Choose from gallery'),
               onTap: () {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Gallery picker not implemented')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Gallery picker not implemented'),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -38,7 +42,9 @@ class _ProfilePageState extends State<ProfilePage> {
               title: const Text('Take a photo'),
               onTap: () {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Camera not implemented')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Camera not implemented')),
+                );
               },
             ),
             ListTile(
@@ -54,7 +60,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _logout() {
     // Replace with real logout logic (clear tokens, navigate to auth)
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Logged out')));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Logged out')));
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
@@ -63,10 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final textColor = Colors.black87;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
@@ -77,16 +82,24 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 8, offset: const Offset(0, 4))],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.12),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: CircleAvatar(
                   radius: 64,
-                  
-                  child: Center(child:IconButton(
-                    iconSize: 50,
-                    icon: const Icon(Icons.person, color: Colors.white70),
-                    onPressed: _editPhoto,
-                  )),
+
+                  child: Center(
+                    child: IconButton(
+                      iconSize: 50,
+                      icon: const Icon(Icons.person, color: Colors.white70),
+                      onPressed: _editPhoto,
+                    ),
+                  ),
                   backgroundColor: Colors.grey.shade200,
                 ),
               ),
@@ -96,37 +109,66 @@ class _ProfilePageState extends State<ProfilePage> {
 
             // User info
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 2,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 8.0,
+                ),
                 child: Column(
                   children: [
                     ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Name', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                      title: Text(
+                        'Name',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
                       subtitle: Text(name, style: TextStyle(color: textColor)),
                     ),
                     const Divider(),
                     ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: Text('NIC', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                      title: Text(
+                        'NIC',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
                       subtitle: Text(nic, style: TextStyle(color: textColor)),
                     ),
                     const Divider(),
                     ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Email', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                      title: Text(
+                        'Email',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
                       subtitle: Text(email, style: TextStyle(color: textColor)),
                     ),
                     const Divider(),
                     ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: Text('Phone', style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+                      title: Text(
+                        'Phone',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
                       subtitle: Text(phone, style: TextStyle(color: textColor)),
                       trailing: IconButton(
                         onPressed: () {},
@@ -146,11 +188,33 @@ class _ProfilePageState extends State<ProfilePage> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red.shade700,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 onPressed: _logout,
-                child: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
+            ),
+            SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return TestPage();
+                    },
+                  ),
+                );
+              },
+              child: Text("Test Page"),
             ),
           ],
         ),
