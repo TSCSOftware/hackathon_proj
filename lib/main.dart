@@ -28,12 +28,22 @@ class FirstResponderApp extends StatelessWidget {
   }
 }
 
-void GotoPage(BuildContext context, Widget page) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) {
-        return page;
-      },
-    ),
-  );
+void GotoPage(BuildContext context, Widget page, {bool isReplace = false}) {
+  if (isReplace) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) {
+          return page;
+        },
+      ),
+    );
+  } else {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return page;
+        },
+      ),
+    );
+  }
 }
