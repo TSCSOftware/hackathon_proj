@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
+import 'package:hackathon_proj/mobile/api/pb.dart';
 import 'package:hackathon_proj/mobile/test_page.dart';
 
 enum _ViewScheme { standard, highContrastLight, highContrastDark, emergency }
@@ -81,12 +83,16 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final email = email_controller.text.trim();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Logged in as $email')));
+      await ApiService.login_withpass(email, _passwordController.text).then((
+        value,
+      ) {
+        if (value) {
+          GotoPage(context, const DashboardPage());
+        }
+      });
     }
   }
 

@@ -65,7 +65,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Disaster Report', style: TextStyle(color: Colors.white)),
+        title: const Text('Disaster  Report', style: TextStyle(color: Colors.white)),
         backgroundColor: darkRed,
         actions: [
           Padding(
@@ -295,7 +295,15 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                 ),
               ),
 
-              // footer removed as requested
+              // Footer (same as dashboard)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  'Disaster mangement',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9), fontWeight: FontWeight.bold),
+                ),
+              ),
             ],
           ),
         ),
