@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_proj/mobile/UI/auth/Registration.dart';
 import 'mobile/UI/auth/Login.dart';
 import 'mobile/UI/splash/ui.dart';
+import 'mobile/UI/dashbord/ui.dart';
 
 void main() {
   runApp(const FirstResponderApp());
@@ -21,6 +22,7 @@ class FirstResponderApp extends StatelessWidget {
         '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegistrationPage(),
+        '/dashboard': (context) => const DashboardPage(),
       },
     );
   }
