@@ -82,8 +82,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     // make top-left button same size/color as center
                     SizedBox(
-                      width: 200,
-                      height: 200,
+                      width: 170,
+                      height: 170,
                       child: Material(
                         color: const Color.fromARGB(255, 255, 208, 208),
                         elevation: 10,
@@ -127,8 +127,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     const SizedBox(width: 12),
                     // make top-right button same size/color as center
                     SizedBox(
-                      width: 200,
-                      height: 200,
+                      width: 170,
+                      height: 170,
                       child: Material(
                         color: const Color.fromARGB(255, 236, 236, 236),
                         elevation: 8,
@@ -174,8 +174,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 12),
                 Center(
                   child: SizedBox(
-                    width: 200,
-                    height: 200,
+                    width: 170,
+                    height: 170,
                     child: Material(
                       color: const Color.fromARGB(179, 194, 244, 202),
                       elevation: 10,

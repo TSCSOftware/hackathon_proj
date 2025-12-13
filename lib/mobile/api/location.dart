@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-Future<bool> _ensureLocationEnabled(BuildContext context) async {
+Future<bool> ensureLocationEnabled(BuildContext context) async {
   final enabled = await Geolocator.isLocationServiceEnabled();
   if (!enabled) {
     final open = await showDialog<bool>(

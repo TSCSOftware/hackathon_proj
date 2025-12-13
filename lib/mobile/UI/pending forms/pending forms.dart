@@ -103,6 +103,15 @@ class _PendingFormsPageState extends State<PendingFormsPage> {
                   final t = _tasks[i];
                   final b = t.body;
                   final incident = (b['incident_type'] ?? 'Unknown').toString();
+                  if (incident=='Unknown'){ {
+                    //remove invalid task
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _deleteTask(i);
+                      setState(() {
+                        
+                      });
+                    });
+                  }}
                   final severity = (b['severity'] ?? '0').toString();
                   final details = (b['additional_details'] ?? '').toString();
                   final coords = b['location'] is Map

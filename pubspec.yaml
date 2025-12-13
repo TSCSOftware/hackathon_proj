@@ -39,6 +39,7 @@ dependencies:
   geolocator: ^11.0.2
   quickalert: ^1.1.0
   flutter_background_service: ^5.1.0
+  permission_handler: ^12.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

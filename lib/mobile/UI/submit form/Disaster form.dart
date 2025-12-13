@@ -376,7 +376,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                     ),
                   ),
                   onPressed: () async {
-                    await Submit_request(
+                     Submit_request(
                       incident_type: _incident,
                       additional_details: _detailsController.text,
                       severity: _severity,
@@ -400,6 +400,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 25),
 
               // Footer (same as dashboard)
             ],
