@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
 
 class DisasterFormPage extends StatefulWidget {
   const DisasterFormPage({Key? key}) : super(key: key);
@@ -380,7 +379,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
               const SizedBox(height: 12),
 
-              // Submit button (green)
+              // Submit button (inverted: white background, green text)
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -414,7 +413,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  'Disaster Mangement',
+                  'Disaster mangement',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.9),
