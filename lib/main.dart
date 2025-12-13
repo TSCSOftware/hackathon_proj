@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/mobile/UI/auth/Registration.dart';
 import 'mobile/UI/auth/Login.dart';
+import 'mobile/UI/splash/ui.dart';
 
 void main() {
   runApp(const FirstResponderApp());
@@ -15,8 +16,9 @@ class FirstResponderApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'FirstResponder',
       theme: ThemeData(primarySwatch: Colors.red),
-      initialRoute: '/login',
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => const SplashPage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegistrationPage(),
       },
