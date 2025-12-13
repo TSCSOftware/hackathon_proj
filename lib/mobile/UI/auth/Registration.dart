@@ -14,6 +14,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
+   final TextEditingController phone_contol = TextEditingController();
   bool _obscure = true;
 
   // Emergency scheme colors (match Login page emergency scheme)
@@ -141,10 +142,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
-                      validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Enter email';
-                        return null;
-                      },
+                      
+                    ),
+
+                     const SizedBox(height: 12),
+                    TextFormField(
+                      controller: phone_contol,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(fontSize: 18, color: _textColor),
+                      decoration: InputDecoration(
+                        labelText: 'phone number',
+                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
+                        prefixIcon: Icon(Icons.person, color: _textColor.withOpacity(0.9)),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: _accentColor, width: 2),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      ),
+                     
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
