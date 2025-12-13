@@ -21,6 +21,31 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
   void _setTimestamp() =>
       setState(() => _timestamp = DateTime.now().toIso8601String());
 
+  Widget OnlineIndicator({required bool asCard}) {
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 6,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Online',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _detailsController.dispose();
