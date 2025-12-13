@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/mobile/UI/submit%20form/func.dart';
 import 'package:hackathon_proj/mobile/UI/widgets/online_indicator.dart';
+import 'package:hackathon_proj/mobile/api/file_upload.dart';
 
 class DisasterFormPage extends StatefulWidget {
   const DisasterFormPage({Key? key}) : super(key: key);
@@ -10,6 +12,7 @@ class DisasterFormPage extends StatefulWidget {
 
 class _DisasterFormPageState extends State<DisasterFormPage> {
   String _incident = '';
+  String photo_id = '';
   int _severity = 1;
   String _coords = '';
   String _timestamp = '';
@@ -145,7 +148,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             child: incidentBox(
                               icon: Icons.landscape,
                               label: 'Landslide',
-                              id: 'landslide',
+                              id: 'LANDSLIDE',
                             ),
                           ),
                           SizedBox(
@@ -154,7 +157,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             child: incidentBox(
                               icon: Icons.water,
                               label: 'Flood',
-                              id: 'flood',
+                              id: 'FLOOD',
                             ),
                           ),
                           SizedBox(
@@ -163,7 +166,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             child: incidentBox(
                               icon: Icons.block,
                               label: 'Road block',
-                              id: 'roadblock',
+                              id: 'ROADBLOCK',
                             ),
                           ),
                           SizedBox(
@@ -172,7 +175,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             child: incidentBox(
                               icon: Icons.power_off,
                               label: 'Power line down',
-                              id: 'powerdown',
+                              id: 'POWERDOWN',
                             ),
                           ),
                           SizedBox(
@@ -181,7 +184,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                             child: incidentBox(
                               icon: Icons.device_unknown,
                               label: 'Other',
-                              id: 'other',
+                              id: 'OTHER',
                             ),
                           ),
                         ],
@@ -338,7 +341,10 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                         ),
                         child: Center(
                           child: TextButton.icon(
-                            onPressed: () {},
+                            onPressed: () async {
+                              photo_id = await Upload_file();
+                              setState(() {});
+                            },
                             icon: const Icon(Icons.add_a_photo),
                             label: const Text('Add Photos'),
                           ),
@@ -396,13 +402,13 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                     ),
                   ),
                   onPressed: () {
-                    // Simple submit action: show a snackbar and clear details
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Form submitted')),
+                    Submit_request(
+                      incident_type: _incident,
+                      additional_details: _detailsController.text,
+                      severity: _severity,
+                      photo_id: photo_id,
                     );
-                    // setState(() {
-                    //   _detailsController.clear();
-                    // });
+                    // TODO
                   },
                   child: const Text(
                     'Submit',

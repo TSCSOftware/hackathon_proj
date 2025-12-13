@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/mobile/api/pb.dart';
 import 'package:hackathon_proj/mobile/test_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -58,8 +59,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _logout() {
-    // Replace with real logout logic (clear tokens, navigate to auth)
+  void _logout() async {
+    await ApiService.logout();
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Logged out')));
@@ -204,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             SizedBox(height: 8),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

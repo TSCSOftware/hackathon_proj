@@ -7,6 +7,7 @@ import 'package:hackathon_proj/mobile/api/pb.dart';
 Future init_Splash(BuildContext context) async {
   var userid = await storage.read(key: "vv_id");
   if (userid != null) {
+    await ApiService.token_login();
     GotoPage(context, const DashboardPage(), isReplace: true);
   } else {
     GotoPage(context, const LoginPage(), isReplace: true);

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/mobile/UI/submit%20form/func.dart';
+import 'package:hackathon_proj/mobile/api/file_upload.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bg.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bgtask.dart';
@@ -66,6 +69,13 @@ class _TestPageState extends State<TestPage> {
                 await Bg_engine.run_queue();
               },
               child: Text('run_queue'),
+            ),
+            // Add more test buttons as needed
+            ElevatedButton(
+              onPressed: () {
+                Upload_file();
+              },
+              child: Text('upload image'),
             ),
           ],
         ),

@@ -27,10 +27,8 @@ class Bgtask {
   Bgtask copyWith({DateTime? timestamp, Map<String, dynamic>? body}) =>
       Bgtask(timestamp: timestamp ?? this.timestamp, body: body ?? this.body);
 
-  /// Encode to string for storage if needed.
   String toJsonString() => jsonEncode(toJson());
 
-  /// Decode from string for storage retrieval.
   static Bgtask fromJsonString(String source) =>
       Bgtask.fromJson(jsonDecode(source) as Map<String, dynamic>);
 

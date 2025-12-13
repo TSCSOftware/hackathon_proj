@@ -32,6 +32,7 @@ class ApiService {
       if (PB.authStore.isValid) {
         await Save_token_to_storage(PB.authStore.token, userid);
       }
+
       // get user id#
 
       return true;
@@ -62,6 +63,7 @@ class ApiService {
               "phone": phone,
             },
           );
+
       return true;
     } catch (e) {
       return false;
@@ -74,7 +76,16 @@ class ApiService {
     print("Saved token to secure_storage");
   }
 
-  static Future logout() async {
+  static Future<String?> token_login() async {
+    String? newToken = await storage.read(key: "vv_token");
+    String? userid = await storage.read(key: "vv_id");
+    if (newToken == null || userid == null) {
+      return null;
+    }
+    PB.authStore.save(newToken, RecordModel({"id": userid}));
+  }
+
+  static Future<void> logout() async {
     await storage.delete(key: "vv_token");
     await storage.delete(key: "vv_id");
     PB.authStore.clear();
