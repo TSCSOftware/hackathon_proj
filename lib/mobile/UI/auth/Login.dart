@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
 
 enum _ViewScheme { standard, highContrastLight, highContrastDark, emergency }
 
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _bgColor,
-     
+
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 28.0),
@@ -139,17 +140,27 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'NIC',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.person, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty) return 'Enter email';
@@ -163,8 +174,13 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(fontSize: 18, color: _textColor),
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        labelStyle: TextStyle(color: _textColor.withOpacity(0.85)),
-                        prefixIcon: Icon(Icons.lock, color: _textColor.withOpacity(0.9)),
+                        labelStyle: TextStyle(
+                          color: _textColor.withOpacity(0.85),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: _textColor.withOpacity(0.9),
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscure ? Icons.visibility : Icons.visibility_off,
@@ -174,13 +190,18 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: _textColor.withOpacity(0.12)),
+                          borderSide: BorderSide(
+                            color: _textColor.withOpacity(0.12),
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: _accentColor, width: 2),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Enter password';
@@ -196,7 +217,10 @@ class _LoginPageState extends State<LoginPage> {
                           backgroundColor: _accentColor,
                           foregroundColor: _textColor,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         onPressed: _submit,
                         child: const Text('Login'),
@@ -206,12 +230,32 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Don't have an account?", style: TextStyle(color: _textColor)),
+                        Text(
+                          "Don't have an account?",
+                          style: TextStyle(color: _textColor),
+                        ),
                         TextButton(
-                          onPressed: () => Navigator.pushNamed(context, '/register'),
-                          child: Text('Register', style: TextStyle(color: _accentColor)),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/register'),
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: _accentColor),
+                          ),
                         ),
                       ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return DashboardPage();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text("dashboard"),
                     ),
                   ],
                 ),
