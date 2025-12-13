@@ -9,9 +9,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  // Form key for validating the login form
   final TextEditingController _emailController = TextEditingController();
+  // Controller for the email input field
   final TextEditingController _passwordController = TextEditingController();
+  // Controller for the password input field
   bool _obscure = true;
+  // Controls whether the password is obscured (hidden)
 
   @override
   void dispose() {
@@ -45,6 +49,10 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Email input field
+                    // - label: 'Email'
+                    // - prefix icon: email icon
+                    // - validator: non-empty check
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -58,6 +66,11 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     const SizedBox(height: 12),
+                    // Password input field
+                    // - label: 'Password'
+                    // - prefix icon: lock
+                    // - suffix icon: toggle visibility
+                    // - validator: non-empty + min length
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscure,
@@ -78,6 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     const SizedBox(height: 20),
+                    // Login action button
+                    // Pressing submits the form and triggers `_submit()`
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -86,6 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
+                    // Register prompt and navigation link
+                    // - Text: "Don't have an account?"
+                    // - Button: navigates to '/register'
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
