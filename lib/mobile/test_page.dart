@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_proj/Web/test.dart';
+import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
 
 class TestPage extends StatefulWidget {
@@ -34,7 +36,11 @@ class _TestPageState extends State<TestPage> {
             ),
 
             SizedBox(height: 16),
-            ElevatedButton(onPressed: () async {}, child: Text('tt')),
+            ElevatedButton(onPressed: () async {
+
+              GotoPage(context, TestPage_web());
+            }, child: Text('tt')),
+
           ],
         ),
       ),

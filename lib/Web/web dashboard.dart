@@ -15,6 +15,11 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
   final List<Report> _incoming = [];
   late final StreamSubscription<Report> _incomingSub;
   final StreamController<Report> _incomingController = StreamController.broadcast();
+  // Map controller so we can programmatically add markers
+  final MapController _mapController = MapController(
+    initPosition: GeoPoint(latitude: 6.7056, longitude: 80.3847),
+    areaLimit: BoundingBox(north: 47.8, east: 10.5, south: 45.8, west: 5.9)
+  );
 
   @override
   void initState() {
@@ -35,6 +40,17 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
     Timer.periodic(const Duration(seconds: 5), (t) {
       if (idx >= demoReports.length) return;
       _incomingController.add(demoReports[idx++]);
+    });
+
+    // Add a marker at the requested fixed location after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await _mapController.addMarker(
+          GeoPoint(latitude: 6.7056, longitude: 80.3847),
+        );
+      } catch (_) {
+        // ignore errors if controller not ready
+      }
     });
   }
 
@@ -98,16 +114,8 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
         children: [
           Expanded(
             child: OSMFlutter(
-  controller: MapController(
-    initPosition: GeoPoint(latitude: 6.7056, longitude: 80.3847),
-    areaLimit: const BoundingBox(
-      east: 10.4922941,
-      north: 47.8084648,
-      south: 45.817995,
-      west: 5.9559113,
-    ),
-     
-  ),
+  controller: _mapController,
+ 
   osmOption: OSMOption(
     userTrackingOption: const UserTrackingOption(
       enableTracking: true,
