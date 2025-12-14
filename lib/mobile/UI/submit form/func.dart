@@ -10,6 +10,118 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 Future create_request() async {}
 
+enum _FallbackChoice { zero, lastKnown, custom, cancel }
+
+Future<_FallbackChoice> _chooseLocationFallback(
+  BuildContext context, {
+  String title = 'LOCATION_UNAVAILABLE',
+  String message = 'Location not available. Choose how to proceed:',
+}) async {
+  final choice = await showDialog<_FallbackChoice>(
+    context: context,
+    builder: (ctx) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(_FallbackChoice.zero),
+            child: const Text('Send 0,0'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(_FallbackChoice.lastKnown),
+            child: const Text('Use Last Known'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(_FallbackChoice.custom),
+            child: const Text('Custom Location'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(_FallbackChoice.cancel),
+            child: const Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+  return choice ?? _FallbackChoice.cancel;
+}
+
+Future<Position?> _promptCustomLatLon(BuildContext context) async {
+  final latController = TextEditingController();
+  final lonController = TextEditingController();
+  final result = await showDialog<Position>(
+    context: context,
+    builder: (ctx) {
+      return AlertDialog(
+        title: const Text('Enter Custom Location'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: latController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Latitude (-90 to 90)',
+              ),
+            ),
+            TextField(
+              controller: lonController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Longitude (-180 to 180)',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(null),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              try {
+                final lat = double.parse(latController.text.trim());
+                final lon = double.parse(lonController.text.trim());
+                if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+                  throw FormatException('Out of range');
+                }
+                Navigator.of(ctx).pop(
+                  Position(
+                    latitude: lat,
+                    longitude: lon,
+                    timestamp: DateTime.now(),
+                    accuracy: 0,
+                    altitude: 0,
+                    heading: 0,
+                    speed: 0,
+                    altitudeAccuracy: 0,
+                    headingAccuracy: 0,
+                    speedAccuracy: 0,
+                  ),
+                );
+              } catch (_) {
+                // keep dialog open; optionally show a simple error via SnackBar
+              }
+            },
+            child: const Text('Use'),
+          ),
+        ],
+      );
+    },
+  );
+  latController.dispose();
+  lonController.dispose();
+  return result;
+}
+
 Future<bool> _confirmForceSend(
   BuildContext context, {
   String title = 'LOCATION_UNAVAILABLE',
@@ -74,13 +186,28 @@ Future Submit_request({
   try {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      final proceed = await _confirmForceSend(
+      final choice = await _chooseLocationFallback(
         context,
         title: 'LOCATION_DISABLED',
-        message: 'Location services are disabled. Force send with (0,0)?',
+        message: 'Location services disabled. Choose a fallback option:',
       );
-      if (proceed) {
+      if (choice == _FallbackChoice.zero) {
         pos = _zeroPosition();
+      } else if (choice == _FallbackChoice.lastKnown) {
+        final last = await Geolocator.getLastKnownPosition();
+        if (last != null) {
+          pos = last;
+        } else {
+          pos = _zeroPosition();
+        }
+      } else if (choice == _FallbackChoice.custom) {
+        final custom = await _promptCustomLatLon(context);
+        if (custom != null) {
+          pos = custom;
+        } else {
+          GotoPage(context, DashboardPage(), isReplace: true);
+          return;
+        }
       } else {
         GotoPage(context, DashboardPage(), isReplace: true);
         return;
@@ -93,13 +220,24 @@ Future Submit_request({
     }
     if (permission == LocationPermission.deniedForever ||
         permission == LocationPermission.denied) {
-      final proceed = await _confirmForceSend(
+      final choice = await _chooseLocationFallback(
         context,
         title: 'LOCATION_PERMISSION_DENIED',
-        message: 'Permission denied. Force send with (0,0)?',
+        message: 'Permission denied. Choose a fallback option:',
       );
-      if (proceed) {
+      if (choice == _FallbackChoice.zero) {
         pos = _zeroPosition();
+      } else if (choice == _FallbackChoice.lastKnown) {
+        final last = await Geolocator.getLastKnownPosition();
+        pos = last ?? _zeroPosition();
+      } else if (choice == _FallbackChoice.custom) {
+        final custom = await _promptCustomLatLon(context);
+        if (custom != null) {
+          pos = custom;
+        } else {
+          GotoPage(context, DashboardPage(), isReplace: true);
+          return;
+        }
       } else {
         GotoPage(context, DashboardPage(), isReplace: true);
         return;
@@ -121,33 +259,54 @@ Future Submit_request({
     );
   } catch (e) {
     try {
-      final last = await Geolocator.getLastKnownPosition();
-      if (last != null) {
-        pos = last;
-        await QuickAlert.show(
-          context: context,
-          title: 'GPS_COMMUNICATION_LOST',
-          text: 'Used last known location.',
-          type: QuickAlertType.error,
-        );
-      } else {
-        final shouldForce = await _confirmForceSend(context);
-        if (shouldForce) {
+      final choice = await _chooseLocationFallback(context);
+      if (choice == _FallbackChoice.zero) {
+        pos = _zeroPosition();
+      } else if (choice == _FallbackChoice.lastKnown) {
+        final last = await Geolocator.getLastKnownPosition();
+        if (last != null) {
+          pos = last;
+          await QuickAlert.show(
+            context: context,
+            title: 'GPS_COMMUNICATION_LOST',
+            text: 'Used last known location.',
+            type: QuickAlertType.error,
+          );
+        } else {
           pos = _zeroPosition();
+        }
+      } else if (choice == _FallbackChoice.custom) {
+        final custom = await _promptCustomLatLon(context);
+        if (custom != null) {
+          pos = custom;
         } else {
           GotoPage(context, DashboardPage(), isReplace: true);
           return;
         }
+      } else {
+        GotoPage(context, DashboardPage(), isReplace: true);
+        return;
       }
     } catch (e2) {
       print("Error obtaining getLastKnownPosition: $e2");
-      final proceed = await _confirmForceSend(
+      final choice = await _chooseLocationFallback(
         context,
         title: 'LOCATION_ERROR',
-        message: 'Unable to retrieve location. Force send with (0,0)?',
+        message: 'Unable to retrieve location. Choose a fallback option:',
       );
-      if (proceed) {
+      if (choice == _FallbackChoice.zero) {
         pos = _zeroPosition();
+      } else if (choice == _FallbackChoice.lastKnown) {
+        final last = await Geolocator.getLastKnownPosition();
+        pos = last ?? _zeroPosition();
+      } else if (choice == _FallbackChoice.custom) {
+        final custom = await _promptCustomLatLon(context);
+        if (custom != null) {
+          pos = custom;
+        } else {
+          GotoPage(context, DashboardPage(), isReplace: true);
+          return;
+        }
       } else {
         GotoPage(context, DashboardPage(), isReplace: true);
         return;
