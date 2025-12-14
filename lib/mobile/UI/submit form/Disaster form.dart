@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hackathon_proj/main.dart';
 import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
 import 'package:hackathon_proj/mobile/UI/submit%20form/func.dart';
@@ -376,19 +377,46 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                     ),
                   ),
                   onPressed: () async {
-                    await Submit_request(
-                      context: context,
-                      incident_type: _incident,
-                      additional_details: _detailsController.text,
-                      severity: _severity,
-                      photo_id: photo_id,
-                    );
-                    await QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.success,
-                    ).then((_) {
-                      GotoPage(context, DashboardPage(), isReplace: true);
-                    });
+                    try {
+                      final pos = await Geolocator.getCurrentPosition(
+                        desiredAccuracy: LocationAccuracy.best,
+                        timeLimit: Duration(seconds: 10),
+                      );
+                      await Submit_request(
+                        context: context,
+                        incident_type: _incident,
+                        additional_details: _detailsController.text,
+                        severity: _severity,
+                        photo_id: photo_id,
+                        pos: pos,
+                      );
+                      await QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.success,
+                      ).then((_) {
+                        GotoPage(context, DashboardPage(), isReplace: true);
+                      });
+                    } catch (e) {
+                      final pos = await Geolocator.getLastKnownPosition();
+
+                      await Submit_request(
+                        context: context,
+                        incident_type: _incident,
+                        additional_details: _detailsController.text,
+                        severity: _severity,
+                        photo_id: photo_id,
+                        pos: pos,
+                      );
+                      await QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.info,
+                        title: 'USED LAST KNOWN LOCATION',
+                        text:
+                            'Failed to get current location. Please try again.',
+                      ).then((_) {
+                        GotoPage(context, DashboardPage(), isReplace: true);
+                      });
+                    }
 
                     // TODO
                   },

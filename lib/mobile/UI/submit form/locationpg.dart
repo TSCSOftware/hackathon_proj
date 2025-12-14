@@ -33,6 +33,20 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
     speedAccuracy: 0,
   );
 
+  Future<void> _useCurrent() async {
+    try {
+      final current = await Geolocator.getCurrentPosition (
+        desiredAccuracy: LocationAccuracy.best,
+        timeLimit: const Duration(seconds: 5),
+      );
+      Navigator.of(context).pop(current);
+    } catch (_) {
+      setState(() {
+        _error = 'Unable to get current location.';
+      });
+    }
+  }
+
   Future<void> _useLastKnown() async {
     final last = await Geolocator.getLastKnownPosition();
     Navigator.of(context).pop(last ?? _zeroPosition());
@@ -84,6 +98,12 @@ class _LocationSelectionPageState extends State<LocationSelectionPage> {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _useCurrent,
+              icon: const Icon(Icons.my_location),
+              label: const Text('Use Current Location'),
+            ),
+            const SizedBox(height: 8),
             ElevatedButton.icon(
               onPressed: _useZero,
               icon: const Icon(Icons.location_off),
