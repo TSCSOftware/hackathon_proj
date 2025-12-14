@@ -43,11 +43,7 @@ Future Submit_request({
           pos = value;
         }
       });
-    } catch (e) {
-      print("Error obtaining getLastKnownPosition: $e");
-    }
-
-    await QuickAlert.show(
+      await QuickAlert.show(
       context: context,
       title: 'GPS_COMMUNICATION_LOST',
       text: 'We Used last known location.',
@@ -55,6 +51,19 @@ Future Submit_request({
     ).then((_) {
       GotoPage(context, DashboardPage(), isReplace: true);
     });
+    } catch (e) {
+      print("Error obtaining getLastKnownPosition: $e");
+      await QuickAlert.show(
+      context: context,
+      title: 'GPS_COMMUNICATION_LOST',
+      text: 'We Used last known location.',
+      type: QuickAlertType.error,
+    ).then((_) {
+      GotoPage(context, DashboardPage(), isReplace: true);
+    });
+    }
+
+    
   }
 
   var userid = await storage.read(key: "vv_id");
