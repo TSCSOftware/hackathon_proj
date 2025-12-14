@@ -67,7 +67,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(color: Color(0xFFE6E6)),
+        decoration: const BoxDecoration(color: Color(0xFFFFE6E6)),
         child: Column(
           children: [
             OnlineIndicator(asCard: true),
