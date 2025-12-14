@@ -93,6 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final textColor = Colors.black87;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFE6E6),
       appBar: AppBar(title: const Text('Profile'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
