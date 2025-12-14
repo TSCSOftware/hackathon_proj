@@ -35,7 +35,10 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
   Widget build(BuildContext context) {
     const Color darkRed = Color(0xFF8B0000);
     const Color lightRed = Color(0xFFFF6B6B);
-
+    Widget widgethh = const Text(
+      'Submit Report',
+      style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+    );
     Widget incidentBox({
       required IconData icon,
       required String label,
@@ -377,6 +380,9 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                     ),
                   ),
                   onPressed: () async {
+                    setState(() {
+                      widgethh = CircularProgressIndicator();
+                    });
                     try {
                       final pos = await Geolocator.getCurrentPosition(
                         desiredAccuracy: LocationAccuracy.best,
@@ -420,13 +426,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
 
                     // TODO
                   },
-                  child: const Text(
-                    'Submit Report',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: widgethh,
                 ),
               ),
               const SizedBox(height: 25),
