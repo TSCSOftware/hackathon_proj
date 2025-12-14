@@ -434,7 +434,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                               type: QuickAlertType.info,
                               title: 'USED LAST KNOWN LOCATION',
                               text:
-                                  'submitted using last known location. Please try again.',
+                                  'submitted using last known location.',
                             ).then((_) {
                               GotoPage(
                                 context,
