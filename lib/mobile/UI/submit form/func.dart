@@ -37,11 +37,16 @@ Future Submit_request({
       );
     });
   } catch (e) {
-    await Geolocator.getLastKnownPosition().then((value) {
-      if (value != null) {
-        pos = value;
-      }
-    });
+    try {
+      await Geolocator.getLastKnownPosition().then((value) {
+        if (value != null) {
+          pos = value;
+        }
+      });
+    } catch (e) {
+      print("Error obtaining getLastKnownPosition: $e");
+    }
+
     await QuickAlert.show(
       context: context,
       title: 'GPS_COMMUNICATION_LOST',
