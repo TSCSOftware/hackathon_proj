@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hackathon_proj/mobile/UI/auth/Registration.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bg.dart';
 import 'mobile/UI/auth/Login.dart';
@@ -66,13 +68,17 @@ void BG_sync() {
       Bg_engine.run_queue();
     }
   });
-
-  // Connectivity().onConnectivityChanged.listen((result) {
-  //   bool is_connnected = _toOnline(result);
-  //   if (is_connnected) {
-  //     Bg_engine.run_queue();
-  //   }
-  // });
+  if (Platform.isAndroid) {
+    Timer.periodic(Duration(minutes: 2), (timer) async {
+      bool is_connnected = _toOnline(await Connectivity().checkConnectivity());
+      if (is_connnected) {
+        var pos = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best,
+          timeLimit: Duration(seconds: 300),
+        );
+      }
+    });
+  }
 }
 
 bool _toOnline(dynamic result) {

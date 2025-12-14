@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hackathon_proj/main.dart';
+import 'package:hackathon_proj/mobile/UI/dashbord/ui.dart';
 import 'package:hackathon_proj/mobile/api/pb.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bg.dart';
 import 'package:hackathon_proj/mobile/bg_engine/bgtask.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 Future create_request() async {}
 
@@ -33,13 +37,19 @@ Future Submit_request({
       );
     });
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          "Error getting location: $e. Using default (0,0). GPS might be disabled.",
-        ),
-      ),
-    );
+    await Geolocator.getLastKnownPosition().then((value) {
+      if (value != null) {
+        pos = value;
+      }
+    });
+    await QuickAlert.show(
+      context: context,
+      title: 'GPS_COMMUNICATION_LOST',
+      text: 'We Used last known location.',
+      type: QuickAlertType.error,
+    ).then((_) {
+      GotoPage(context, DashboardPage(), isReplace: true);
+    });
   }
 
   var userid = await storage.read(key: "vv_id");
