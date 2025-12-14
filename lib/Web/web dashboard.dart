@@ -60,7 +60,7 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
         Color color;
         IconData iconData;
         if (status == 'PENDING') {
-          color = Colors.amber;
+          color = const Color.fromARGB(255, 255, 1, 1);
           iconData = Icons.location_on;
         } else if (status == 'ACTION_TAKEN') {
           color = const Color.fromARGB(255, 105, 7, 128);
@@ -263,7 +263,7 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
 
           AnimatedContainer(
             duration: const Duration(milliseconds: 250),
-            width: _sidebarOpen ? 380 : 0,
+            width: _sidebarOpen ? 450 : 0,
             child: _sidebarOpen ? LiveDataPage() : const SizedBox.shrink(),
           ),
         ],

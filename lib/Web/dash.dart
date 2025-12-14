@@ -12,7 +12,14 @@ class WebDashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Web Dashboard')),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6B0000),
+        centerTitle: true,
+        title: const Text(
+          'Web Dashboard',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth > 600;
