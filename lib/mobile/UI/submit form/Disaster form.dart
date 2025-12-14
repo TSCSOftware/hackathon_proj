@@ -376,7 +376,8 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                     ),
                   ),
                   onPressed: () async {
-                     Submit_request(
+                    Submit_request(
+                      context: context,
                       incident_type: _incident,
                       additional_details: _detailsController.text,
                       severity: _severity,
