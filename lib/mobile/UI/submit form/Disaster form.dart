@@ -109,7 +109,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [lightRed.withOpacity(0.25), const Color(0xFFF2F2F2)],
+            colors: [Color(0xFFFFE6E6), const Color(0xFFF2F2F2)],
           ),
         ),
         child: SingleChildScrollView(
