@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_proj/Web/dash.dart';
-import 'package:hackathon_proj/Web/web%20dashboard.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
