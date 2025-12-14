@@ -22,9 +22,13 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
   Future<void> _loadSubmitted() async {
     final prefs = await SharedPreferences.getInstance();
     final list = prefs.getStringList('succeed_request_queue') ?? [];
-   
+    // Build tasks, then filter out any with Unknown incident type
+    final tasks = list.reversed.map((e) => Bgtask.fromJsonString(e)).where((t) {
+      final incident = (t.body['incident_type'] ?? 'Unknown').toString();
+      return incident != 'Unknown';
+    }).toList();
     setState(() {
-      _submitted = list.reversed.map((e) => Bgtask.fromJsonString(e)).toList();
+      _submitted = tasks;
     });
   }
 
@@ -91,206 +95,208 @@ class _SubmittedReportsPageState extends State<SubmittedReportsPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: _submitted.isEmpty
-            ? const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.inbox_outlined, size: 80, color: Colors.grey),
-                    SizedBox(height: 16),
-                    Text(
-                      'No submitted reports',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              )
-            : ListView.builder(
-                itemCount: _submitted.length,
-                itemBuilder: (context, i) {
-                  final t = _submitted[i];
-                  final b = t.body;
-                  final incident = (b['incident_type'] ?? 'Unknown').toString();
-                  final severity = (b['severity'] ?? '0').toString();
-                  final details = (b['additional_details'] ?? '').toString();
-                  final coords = b['location'] is Map
-                      ? (b['location'] as Map).entries
-                            .map(
-                              (e) =>
-                                  '${e.key}: ${double.tryParse(e.value.toString())?.toStringAsFixed(4) ?? e.value}',
-                            )
-                            .join(', ')
-                      : '';
-                  final timestamp = t.timestamp;
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.inbox_outlined, size: 80, color: Colors.grey),
+                      SizedBox(height: 16),
+                      Text(
+                        'No submitted reports',
+                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _submitted.length,
+                  itemBuilder: (context, i) {
+                    final t = _submitted[i];
+                    final b = t.body;
+                    final incident = (b['incident_type'] ?? 'Unknown')
+                        .toString();
+                    final severity = (b['severity'] ?? '0').toString();
+                    final details = (b['additional_details'] ?? '').toString();
+                    final coords = b['location'] is Map
+                        ? (b['location'] as Map).entries
+                              .map(
+                                (e) =>
+                                    '${e.key}: ${double.tryParse(e.value.toString())?.toStringAsFixed(4) ?? e.value}',
+                              )
+                              .join(', ')
+                        : '';
+                    final timestamp = t.timestamp;
 
-                  return Card(
-                    elevation: 0,
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 6,
-                      horizontal: 8,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            title: Row(
-                              children: [
-                                Icon(
-                                  _getIncidentIcon(incident),
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    incident.isEmpty
-                                        ? 'Unknown incident'
-                                        : incident,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
+                    return Card(
+                      elevation: 0,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    _getIncidentIcon(incident),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      incident.isEmpty
+                                          ? 'Unknown incident'
+                                          : incident,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
+                                  ),
+                                ],
+                              ),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _buildDetailRow(
+                                      'Severity:',
+                                      severity,
+                                      color: _getSeverityColor(severity),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    _buildDetailRow(
+                                      'When',
+                                      DateFormat.yMMMd().add_jm().format(
+                                        timestamp.toLocal(),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    if (coords.isNotEmpty)
+                                      _buildDetailRow('Coords:', coords),
+                                    if (details.isNotEmpty) ...[
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'Details:',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(details),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Close'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    _deleteSubmitted(i);
+                                  },
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
                                   ),
                                 ),
                               ],
                             ),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _buildDetailRow(
-                                    'Severity:',
-                                    severity,
-                                    color: _getSeverityColor(severity),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  _buildDetailRow(
-                                    'When',
-                                    DateFormat.yMMMd().add_jm().format(
-                                      timestamp.toLocal(),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  if (coords.isNotEmpty)
-                                    _buildDetailRow('Coords:', coords),
-                                  if (details.isNotEmpty) ...[
-                                    const SizedBox(height: 12),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 22,
+                                backgroundColor: _getSeverityColor(
+                                  severity,
+                                ).withOpacity(0.15),
+                                child: Icon(
+                                  _getIncidentIcon(incident),
+                                  color: _getSeverityColor(severity),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                     Text(
-                                      'Details:',
-                                      style: TextStyle(
+                                      incident,
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        color: Colors.grey.shade600,
+                                        fontSize: 16,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 4),
-                                    Text(details),
+                                    Text(
+                                      DateFormat.yMMMd().add_jm().format(
+                                        timestamp.toLocal(),
+                                      ),
+                                      style: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ],
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Close'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  _deleteSubmitted(i);
-                                },
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
                                 ),
+                              ),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _getSeverityColor(severity),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      'SEV $severity',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.grey,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 22,
-                              backgroundColor: _getSeverityColor(
-                                severity,
-                              ).withOpacity(0.15),
-                              child: Icon(
-                                _getIncidentIcon(incident),
-                                color: _getSeverityColor(severity),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    incident,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    DateFormat.yMMMd().add_jm().format(
-                                      timestamp.toLocal(),
-                                    ),
-                                    style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _getSeverityColor(severity),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    'SEV $severity',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Icon(
-                                  Icons.chevron_right,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ],
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
+        ),
       ),
-    ));
+    );
   }
 
   Widget _buildDetailRow(String title, String value, {Color? color}) {

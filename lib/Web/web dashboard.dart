@@ -89,9 +89,11 @@ class _WebDashboardPageState extends State<WebDashboardPage> {
   void initState() {
     super.initState();
     // subscribe to simulated incoming stream
-    Future.delayed(Duration.zero, () async {
+    //  timer that fetches from server every 10seconds
+    Timer.periodic(const Duration(seconds: 2), (timer) async {
       await _fetchAndPlotRequests();
     });
+
     _incomingSub = _incomingController.stream.listen((r) {
       setState(() => _incoming.insert(0, r));
     });
