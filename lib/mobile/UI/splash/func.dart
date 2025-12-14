@@ -9,8 +9,9 @@ import 'package:hackathon_proj/mobile/api/pb.dart';
 Future init_Splash(BuildContext context) async {
   var userid = await storage.read(key: "vv_id");
   if (Platform.isAndroid) {
-      await initializeService();
-  startBackgroundService() ;
+    print("Initializing background service for Android");
+    await initializeService();
+    startBackgroundService();
   }
 
   if (userid != null) {
