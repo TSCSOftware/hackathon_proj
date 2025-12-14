@@ -21,6 +21,7 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
   String _coords = '';
   String _timestamp = '';
   final TextEditingController _detailsController = TextEditingController();
+  bool _isSubmitting = false;
 
   void _pickIncident(String id) => setState(() => _incident = id);
   void _setSeverity(int s) => setState(() => _severity = s);
@@ -35,10 +36,19 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
   Widget build(BuildContext context) {
     const Color darkRed = Color(0xFF8B0000);
     const Color lightRed = Color(0xFFFF6B6B);
-    Widget widgethh = const Text(
-      'Submit Report',
-      style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
-    );
+    final Widget submitChild = _isSubmitting
+        ? const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.5,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          )
+        : const Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+          );
     Widget incidentBox({
       required IconData icon,
       required String label,
@@ -379,54 +389,70 @@ class _DisasterFormPageState extends State<DisasterFormPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () async {
-                    setState(() {
-                      widgethh = CircularProgressIndicator();
-                    });
-                    try {
-                      final pos = await Geolocator.getCurrentPosition(
-                        desiredAccuracy: LocationAccuracy.best,
-                        timeLimit: Duration(seconds: 10),
-                      );
-                      await Submit_request(
-                        context: context,
-                        incident_type: _incident,
-                        additional_details: _detailsController.text,
-                        severity: _severity,
-                        photo_id: photo_id,
-                        pos: pos,
-                      );
-                      await QuickAlert.show(
-                        context: context,
-                        type: QuickAlertType.success,
-                      ).then((_) {
-                        GotoPage(context, DashboardPage(), isReplace: true);
-                      });
-                    } catch (e) {
-                      final pos = await Geolocator.getLastKnownPosition();
+                  onPressed: _isSubmitting
+                      ? null
+                      : () async {
+                          setState(() {
+                            _isSubmitting = true;
+                          });
+                          try {
+                            final pos = await Geolocator.getCurrentPosition(
+                              desiredAccuracy: LocationAccuracy.best,
+                              timeLimit: Duration(seconds: 10),
+                            );
+                            await Submit_request(
+                              context: context,
+                              incident_type: _incident,
+                              additional_details: _detailsController.text,
+                              severity: _severity,
+                              photo_id: photo_id,
+                              pos: pos,
+                            );
+                            await QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.success,
+                            ).then((_) {
+                              GotoPage(
+                                context,
+                                DashboardPage(),
+                                isReplace: true,
+                              );
+                            });
+                          } catch (e) {
+                            final pos = await Geolocator.getLastKnownPosition();
 
-                      await Submit_request(
-                        context: context,
-                        incident_type: _incident,
-                        additional_details: _detailsController.text,
-                        severity: _severity,
-                        photo_id: photo_id,
-                        pos: pos,
-                      );
-                      await QuickAlert.show(
-                        context: context,
-                        type: QuickAlertType.info,
-                        title: 'USED LAST KNOWN LOCATION',
-                        text:
-                            'Failed to get current location. Please try again.',
-                      ).then((_) {
-                        GotoPage(context, DashboardPage(), isReplace: true);
-                      });
-                    }
+                            await Submit_request(
+                              context: context,
+                              incident_type: _incident,
+                              additional_details: _detailsController.text,
+                              severity: _severity,
+                              photo_id: photo_id,
+                              pos: pos,
+                            );
+                            await QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.info,
+                              title: 'USED LAST KNOWN LOCATION',
+                              text:
+                                  'submitted using last known location. Please try again.',
+                            ).then((_) {
+                              GotoPage(
+                                context,
+                                DashboardPage(),
+                                isReplace: true,
+                              );
+                            });
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                _isSubmitting = false;
+                              });
+                            }
+                          }
 
-                    // TODO
-                  },
-                  child: widgethh,
+                          // TODO
+                        },
+                  child: submitChild,
                 ),
               ),
               const SizedBox(height: 25),
