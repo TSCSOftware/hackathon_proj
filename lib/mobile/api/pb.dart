@@ -45,7 +45,6 @@ class ApiService {
       // SET  SHAREDPREF NAME,EMAIL, NIC, PHONE
 
       // get user id#
-      
 
       return true;
     } catch (e) {
@@ -101,6 +100,8 @@ class ApiService {
     await storage.delete(key: "vv_token");
     await storage.delete(key: "vv_id");
     PB.authStore.clear();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
     print("Logged out and cleared secure storage");
   }
 }

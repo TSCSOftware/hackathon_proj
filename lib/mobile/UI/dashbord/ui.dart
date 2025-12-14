@@ -221,53 +221,142 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             const SizedBox(height: 16),
 
-            // Blank container for GPS coordinates
+            // Redesigned GPS coordinates card
             Card(
+              elevation: 4,
               color: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Your current co-ordinates',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _coords.isEmpty ? '-' : _coords,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE3F2FD),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.my_location,
+                        color: Color(0xFF1565C0),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // Optional quick action to simulate fetching coordinates
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () async {
-                          Future.delayed(Duration.zero, () async {
-print("Getting coordinates...");
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Current GPS Coordinates',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.place,
+                                size: 16,
+                                color: Colors.grey[700],
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  _coords.isEmpty ? '—' : _coords,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black87,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF1565C0),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 10,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  // Fetch with permission handling and show progress
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (_) => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                  try {
+                                    LocationPermission permission =
+                                        await Geolocator.checkPermission();
+                                    if (permission ==
+                                        LocationPermission.denied) {
+                                      permission =
+                                          await Geolocator.requestPermission();
+                                    }
+                                    if (permission ==
+                                            LocationPermission.deniedForever ||
+                                        permission ==
+                                            LocationPermission.denied) {
+                                      Navigator.of(context).pop();
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Location permission denied',
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
 
-                              final pos = await Geolocator.getCurrentPosition(
-                            desiredAccuracy: LocationAccuracy.best,
-                            timeLimit:Duration(minutes:6 ),
-                          );
-                          print(  pos);
-                          setState(() {
-                            // placeholder coordinates (replace with real GPS integration)
-                            _coords =
-                                '${pos.latitude.toStringAsFixed(6)}, ${pos.longitude.toStringAsFixed(6)}';
-                          });
-                          });
-
-
-                        },
-                        child: const Text('Get Coordinates'),
+                                    final pos =
+                                        await Geolocator.getCurrentPosition(
+                                          desiredAccuracy:
+                                              LocationAccuracy.best,
+                                          timeLimit: const Duration(
+                                            seconds: 20,
+                                          ),
+                                        );
+                                    setState(() {
+                                      _coords =
+                                          '${pos.latitude.toStringAsFixed(6)}, ${pos.longitude.toStringAsFixed(6)}';
+                                    });
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Failed to get location: $e',
+                                        ),
+                                      ),
+                                    );
+                                  } finally {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                icon: const Icon(Icons.gps_fixed),
+                                label: const Text('Get Coordinates'),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
